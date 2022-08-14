@@ -8,36 +8,46 @@
       <form method="post" action="/entry">
         <div class="row">
             <div class="mb-3 col-lg-6 col-md-6 col-sm-6 col-6">
-                <label  class="form-label">Name</label>
+                <label  class="form-label">Name*</label>
                 <input autocomplete="off" type="text" class="form-control" name="studentName" placeholder="enter Full Name">
               </div>
               <div class="mb-3 col-lg-6 col-md-6 col-sm-6 col-6">
-                <label  class="form-label">Test Date</label>
+                <label  class="form-label">Test Date*</label>
                 <input autocomplete="off" type="date" class="form-control" name="testDate">
               </div>
 
         </div>
         
        
-        <div class="mb-3 ">
-            <label class="form-label">Choose Category</label>
+        <div class="mb-3 col-lg-6 col-md-6 col-sm-6 col-6">
+            <label class="form-label">Choose Category*</label>
             <select class="form-control" name="category" size="1">
-                <option value="mock">mock</option>
                 <option value="test">test</option>
+                <option value="mock">mock</option>
                 
               </select>
         </div>
-        <div class="mb-3 ">
-            <label class="form-label" >Enter Subject Name</label>
+        <div class="row">
+        <div class="mb-3 col-lg-6 col-md-6 col-sm-6 col-6">
+            <label class="form-label" >Enter Subject Name*</label>
             <input autocomplete="off" type="text" class="form-control" name="subjectName">
           </div>
+          <div class="mb-3 col-lg-6 col-md-6 col-sm-6 col-6">
+            <label class="form-label">Status*</label>
+            <select class="form-control" name="status" size="1">
+                <option value="attempted">attempted</option>
+                <option value="notAttempted">not attempted</option>
+                
+              </select>
+        </div>
+        </div>
           <div class="row">
             <div class="mb-3  col-lg-6 col-md-6 col-sm-6 col-6">
-                <label class="form-label" >Obtained Marks</label>
+                <label class="form-label" >Obtained Marks*</label>
                 <input autocomplete="off" type="text" class="form-control" name="marks">
               </div>
               <div class="mb-3  col-lg-6 col-md-6 col-sm-6 col-6">
-                <label class="form-label" >Total Marks</label>
+                <label class="form-label" >Total Marks*</label>
                 <input autocomplete="off" type="text" class="form-control" name="totalMarks">
               </div>
 

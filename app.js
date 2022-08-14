@@ -25,14 +25,19 @@ const testsSchema = new mongoose.Schema({
         type: String,
         required: [true, "please enter course name"],
     },
+    status: {
+        type: String,
+        required: [true, "please enter course name"],
+    },
     obtainedMarks: {
         type: Number,
-        required: [true, "please enter obtained marks"]
+        // required: [true, "please enter obtained marks"]
     },
     totalMarks: {
         type: Number,
         required: [true, "please enter total marks"]
-    }
+    },
+    grade: String,
 });
 const studentsSchema = new mongoose.Schema({
     name: {
@@ -43,10 +48,11 @@ const studentsSchema = new mongoose.Schema({
         type: String,
         required: [true, "please enter Date of Birth"],
     },
-    class:{
+    class: {
         type: String,
         required: [true, "please enter Date of Birth"],
     },
+    branchName: String,
     address: String,
     phoneNumber: String,
     subjects: [testsSchema],
@@ -68,10 +74,10 @@ app.post("/", function (req, res) {
     const newStudent = new Student({
         name: _.lowerCase(req.body.studentName),
         DOB: req.body.DOB,
-        class:_.lowerCase(req.body.class),
+        class: _.lowerCase(req.body.class),
         address: _.lowerCase(req.body.address),
         phoneNumber: _.lowerCase(req.body.phoneNumber),
-       
+        branchName: _.lowerCase(req.body.branchName),
     })
     newStudent.save();
     res.redirect("/");
@@ -82,14 +88,57 @@ app.get("/entry", function (req, res) {
 })
 
 app.post("/entry", function (req, res) {
-    const newTestEntry = new Test({
-        date: req.body.testDate,
-        category: _.lowerCase(req.body.category),
-        title: _.lowerCase(req.body.subjectName),
-        obtainedMarks: req.body.marks,
-        totalMarks: req.body.totalMarks,
-    })
-    console.log(req.body.studentName);
+    let grade = "";
+    if (req.body.status === "notAttempted") {
+
+
+        var newTestEntry = new Test({
+            date: req.body.testDate,
+            category: _.lowerCase(req.body.category),
+            title: _.lowerCase(req.body.subjectName),
+            status: req.body.status,
+            obtainedMarks: 0,
+            totalMarks: req.body.totalMarks,
+            grade:"U",
+        })
+        newTestEntry.save();
+    } else {
+        let calculatedGrade = (req.body.marks / req.body.totalMarks) * 100;
+        console.log(calculatedGrade);
+    
+            if(calculatedGrade > 79.99){
+                grade = "A";
+                
+            }
+            else if (calculatedGrade > 69.99 && calculatedGrade<80){
+                grade = "B";
+                
+            }
+            else if (calculatedGrade > 59.99 && calculatedGrade<70){ 
+                grade = "C";
+            
+            }
+            else if (calculatedGrade > 49.99 && calculatedGrade<60){
+                grade = "D";
+                
+            }
+            else{
+                grade="F"
+            
+        }
+        var newTestEntry = new Test({
+            date: req.body.testDate,
+            category: _.lowerCase(req.body.category),
+            title: _.lowerCase(req.body.subjectName),
+            status: _.lowerCase(req.body.status),
+            obtainedMarks: req.body.marks,
+            totalMarks: req.body.totalMarks,
+            grade:grade,
+        })
+        newTestEntry.save();
+    }
+
+
     Student.findOneAndUpdate(
         { name: _.lowerCase(req.body.studentName) },
         { "$push": { "subjects": newTestEntry } },
@@ -123,9 +172,9 @@ app.get("/find/:studentName", function (req, res) {
             } else {
                 res.render("foundSpec", { student: foundStudent });
             }
-        }else{
+        } else {
             res.send("<h1> student Not Found.")
-            
+
         }
     })
 })
@@ -177,6 +226,6 @@ app.get("/delete/:studentName", function (req, res) {
         }
     })
 })
-app.listen(process.env.PORT ||3000, function (req, res) {
+app.listen(process.env.PORT || 3000, function (req, res) {
     console.log("server is running at port 3000");
 })

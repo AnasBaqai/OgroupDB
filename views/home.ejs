@@ -6,29 +6,38 @@
     <div class="card-body">
       <h2 class="card-title">Registration Form</h2>
       <form method="post" action="/">
-        <div class="mb-3">
-          <label  class="form-label">Name</label>
-          <input autocomplete="off" type="text" class="form-control" name="studentName" placeholder="enter Full Name">
+        <div class="row">
+
+          <div class="mb-3 col-lg-6 col-md-6 col-sm-6 col-6">
+            <label class="form-label">Name*</label>
+            <input autocomplete="off" type="text" class="form-control" name="studentName" placeholder="enter Full Name">
+          </div>
+          <div class="mb-3 col-lg-6 col-md-6 col-sm-6 col-6">
+            <label class="form-label">Date Of Birth</label>
+            <input autocomplete="off" type="date" class="form-control" name="DOB">
+          </div>
         </div>
-        <div class="mb-3">
-          <label  class="form-label">Date Of Birth</label>
-          <input autocomplete="off" type="date" class="form-control" name="DOB">
+        <div class="row">
+          <div class="mb-3 col-lg-6 col-md-6 col-sm-6 col-6">
+            <label class="form-label">Students Class*</label>
+            <input autocomplete="off" type="text" class="form-control" name="class">
+          </div>
+          <div class="mb-3 col-lg-6 col-md-6 col-sm-6 col-6">
+            <label class="form-label">Enter Branch name*</label>
+            <input autocomplete="off" type="text" class="form-control" name="branchName">
+          </div>
         </div>
         <div class="mb-3 ">
-          <label class="form-label" >Enter Students Class</label>
-          <input autocomplete="off" type="text" class="form-control" name="class">
-        </div>
-        <div class="mb-3 ">
-          <label class="form-label" >Enter Students Address</label>
+          <label class="form-label">Enter Students Address</label>
           <input autocomplete="off" type="text" class="form-control" name="address">
         </div>
         <div class="mb-3 ">
-            <label class="form-label" >Enter Phone Number</label>
-            <input autocomplete="off" type="text" class="form-control" name="phoneNumber">
-          </div>
+          <label class="form-label">Enter Phone Number</label>
+          <input autocomplete="off" type="text" class="form-control" name="phoneNumber">
+        </div>
         <button type="submit" class="btn btn-dark">Register <i class="fa-solid fa-id-card fa-lg"></i></button>
       </form>
-    
+
     </div>
   </div>
 
@@ -36,4 +45,4 @@
 
 
 
-<%- include("partials/footer") -%>
+  <%- include("partials/footer") -%>
