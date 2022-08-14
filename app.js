@@ -9,7 +9,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs')
 app.use(express.static("public"));
 
-mongoose.connect("mongodb://localhost:27017/OgroupStudentsDB");
+mongoose.connect("mongodb+srv://anasbaqai:An12as34@cluster0.uuocn2n.mongodb.net/OgroupStudentsDB");
 
 
 const testsSchema = new mongoose.Schema({
