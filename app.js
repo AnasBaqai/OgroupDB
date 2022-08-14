@@ -15,19 +15,19 @@ mongoose.connect("mongodb+srv://anasbaqai:An12as34@cluster0.uuocn2n.mongodb.net/
 const testsSchema = new mongoose.Schema({
     date: {
         type: String,
-        required: [true, "please enter Date"],
+        // required: [true, "please enter Date"],
     },
     category: {
         type: String,
-        required: [true, "please enter category"],
+        // required: [true, "please enter category"],
     },
     title: {
         type: String,
-        required: [true, "please enter course name"],
+        // required: [true, "please enter course name"],
     },
     status: {
         type: String,
-        required: [true, "please enter course name"],
+        // required: [true, "please enter course name"],
     },
     obtainedMarks: {
         type: Number,
@@ -35,18 +35,18 @@ const testsSchema = new mongoose.Schema({
     },
     totalMarks: {
         type: Number,
-        required: [true, "please enter total marks"]
+        // required: [true, "please enter total marks"]
     },
     grade: String,
 });
 const studentsSchema = new mongoose.Schema({
     _id:{
         type: String,
-        required: [true, "please enter name"],
+        // required: [true, "please enter name"],
     },
     name: {
         type: String,
-        required: [true, "please enter name"],
+        // required: [true, "please enter name"],
     },
     // DOB: {
     //     type: String,
@@ -54,7 +54,7 @@ const studentsSchema = new mongoose.Schema({
     // },
     class: {
         type: String,
-        required: [true, "please enter Date of Birth"],
+        // required: [true, "please enter Date of Birth"],
     },
     branchName: String,
     address: String,
