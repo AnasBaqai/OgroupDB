@@ -32,9 +32,21 @@ nav{
     padding: 2%;
 }
 
+.card{
+    width: 28rem;
+}
 
 @media print {
     #print{
         display: none;
+    }
+}
+
+@media (max-width:1000px){
+    .card{
+        width: 18rem;
+    }
+    body{
+        min-height: 53rem;
     }
 }

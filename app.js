@@ -43,6 +43,10 @@ const studentsSchema = new mongoose.Schema({
         type: String,
         required: [true, "please enter Date of Birth"],
     },
+    class:{
+        type: String,
+        required: [true, "please enter Date of Birth"],
+    },
     address: String,
     phoneNumber: String,
     subjects: [testsSchema],
@@ -64,8 +68,10 @@ app.post("/", function (req, res) {
     const newStudent = new Student({
         name: _.lowerCase(req.body.studentName),
         DOB: req.body.DOB,
+        class:_.lowerCase(req.body.class),
         address: _.lowerCase(req.body.address),
         phoneNumber: _.lowerCase(req.body.phoneNumber),
+       
     })
     newStudent.save();
     res.redirect("/");
