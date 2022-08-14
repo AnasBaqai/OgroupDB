@@ -40,14 +40,18 @@ const testsSchema = new mongoose.Schema({
     grade: String,
 });
 const studentsSchema = new mongoose.Schema({
+    _id:{
+        type: String,
+        required: [true, "please enter name"],
+    },
     name: {
         type: String,
         required: [true, "please enter name"],
     },
-    DOB: {
-        type: String,
-        // required: [true, "please enter Date of Birth"],
-    },
+    // DOB: {
+    //     type: String,
+    //     // required: [true, "please enter Date of Birth"],
+    // },
     class: {
         type: String,
         required: [true, "please enter Date of Birth"],
@@ -73,7 +77,7 @@ app.get("/", function (req, res) {
 app.post("/", function (req, res) {
     const newStudent = new Student({
         name: _.lowerCase(req.body.studentName),
-        DOB: req.body.DOB,
+        _id: _.lowerCase(req.body.id),
         class: _.lowerCase(req.body.class),
         address: _.lowerCase(req.body.address),
         phoneNumber: _.lowerCase(req.body.phoneNumber),
@@ -84,7 +88,7 @@ app.post("/", function (req, res) {
 })
 
 app.get("/entry", function (req, res) {
-    res.render("testEntry")
+    res.render("testEntry", {studentName:""})
 })
 
 app.post("/entry", function (req, res) {
@@ -236,6 +240,22 @@ app.get("/delete/:studentName", function (req, res) {
         }
     })
 })
+
+app.post("/id",function(req,res){
+    Student.findOne({ _id: _.lowerCase(req.body.id) }, function (err, foundStudent) {
+        if (foundStudent) {
+            if (err) {
+                console.log(err);
+            } else {
+                res.render("testEntry", { studentName: foundStudent.name });
+            }
+        } else {
+            res.send("<h1> student Not Found.</h1>")
+
+        }
+    })
+})
+
 app.listen(process.env.PORT || 3000, function (req, res) {
     console.log("server is running at port 3000");
 })

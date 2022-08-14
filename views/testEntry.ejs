@@ -5,11 +5,22 @@
   <div class="card mx-auto my-5">
     <div class="card-body">
       <h2 class="card-title">Test Entry </h2>
+      <form action="/id" method="post">
+        <div class="row">
+          <div class="mb-3 col-lg-8 col-md-8 col-sm-8 col-8">
+            <label  class="form-label">enter ID*</label>
+            <input autocomplete="off" type="text" class="form-control" name="id" placeholder="enter id">
+          </div>
+          <div class="mb-3 col-lg-4 col-md-4 col-sm-4 col-4">
+            <button type="submit" class="btn btn-md btn-dark mx-3 my-4"> submit</button>
+          </div>
+        </div>
+      </form>
       <form method="post" action="/entry">
         <div class="row">
             <div class="mb-3 col-lg-6 col-md-6 col-sm-6 col-6">
                 <label  class="form-label">Name*</label>
-                <input autocomplete="off" type="text" class="form-control" name="studentName" placeholder="enter Full Name">
+                <h5><%= studentName %></h5>
               </div>
               <div class="mb-3 col-lg-6 col-md-6 col-sm-6 col-6">
                 <label  class="form-label">Test Date*</label>
