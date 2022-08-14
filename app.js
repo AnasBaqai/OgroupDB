@@ -88,7 +88,7 @@ app.post("/", function (req, res) {
 })
 
 app.get("/entry", function (req, res) {
-    res.render("testEntry", {studentName:""})
+    res.render("testEntry", {student:""})
 })
 
 app.post("/entry", function (req, res) {
@@ -145,9 +145,9 @@ app.post("/entry", function (req, res) {
         newTestEntry.save();
     }
 
-    
+    console.log(_.lowerCase(req.body.studentID))
     Student.findOneAndUpdate(
-        { name: _.lowerCase(req.body.studentName) },
+        { _id: _.lowerCase(req.body.studentID) },
         { "$push": { "subjects": newTestEntry } },
         function (err,foundStudent) {
             if (err) {
@@ -172,12 +172,12 @@ app.get("/find", function (req, res) {
 
 app.post("/find", function (req, res) {
 
-    res.redirect("/find/" + req.body.studentName)
+    res.redirect("/find/" + req.body.studentID)
 })
-app.get("/find/:studentName", function (req, res) {
+app.get("/find/:studentID", function (req, res) {
 
-    stdName = _.lowerCase(req.params.studentName);
-    Student.findOne({ name: stdName }, function (err, foundStudent) {
+    stdID = _.lowerCase(req.params.studentID);
+    Student.findOne({ _id: stdID }, function (err, foundStudent) {
         if (foundStudent) {
             if (err) {
                 console.log(err);
@@ -245,7 +245,7 @@ app.post("/id",function(req,res){
             if (err) {
                 console.log(err);
             } else {
-                res.render("testEntry", { studentName: foundStudent.name });
+                res.render("testEntry", { student: foundStudent });
             }
         } else {
             res.send("<h1> student Not Found.</h1>")
