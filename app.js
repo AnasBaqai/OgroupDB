@@ -46,7 +46,7 @@ const studentsSchema = new mongoose.Schema({
     },
     DOB: {
         type: String,
-        required: [true, "please enter Date of Birth"],
+        // required: [true, "please enter Date of Birth"],
     },
     class: {
         type: String,
@@ -99,7 +99,7 @@ app.post("/entry", function (req, res) {
             status: req.body.status,
             obtainedMarks: 0,
             totalMarks: req.body.totalMarks,
-            grade:"U",
+            grade:"F",
         })
         newTestEntry.save();
     } else {
