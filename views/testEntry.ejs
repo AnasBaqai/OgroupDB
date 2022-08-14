@@ -1,0 +1,57 @@
+<%- include("partials/header") -%>
+
+
+
+  <div class="card mx-auto my-5" style="width: 28rem;">
+    <div class="card-body">
+      <h2 class="card-title">Test Entry </h2>
+      <form method="post" action="/entry">
+        <div class="row">
+            <div class="mb-3 col-lg-6 col-md-6 col-sm-6 col-6">
+                <label  class="form-label">Name</label>
+                <input type="text" class="form-control" name="studentName" placeholder="enter Full Name">
+              </div>
+              <div class="mb-3 col-lg-6 col-md-6 col-sm-6 col-6">
+                <label  class="form-label">Test Date</label>
+                <input type="date" class="form-control" name="testDate">
+              </div>
+
+        </div>
+        
+       
+        <div class="mb-3 ">
+            <label class="form-label">Choose Category</label>
+            <select class="form-control" name="category" size="1">
+                <option value="mock">mock</option>
+                <option value="test">test</option>
+                
+              </select>
+        </div>
+        <div class="mb-3 ">
+            <label class="form-label" >Enter Subject Name</label>
+            <input type="text" class="form-control" name="subjectName">
+          </div>
+          <div class="row">
+            <div class="mb-3  col-lg-6 col-md-6 col-sm-6 col-6">
+                <label class="form-label" >Obtained Marks</label>
+                <input type="text" class="form-control" name="marks">
+              </div>
+              <div class="mb-3  col-lg-6 col-md-6 col-sm-6 col-6">
+                <label class="form-label" >Total Marks</label>
+                <input type="text" class="form-control" name="totalMarks">
+              </div>
+
+          </div>
+       
+          
+        <button type="submit" class="btn btn-dark">ADD <i class="fa-solid fa-file fa-lg"></i></button>
+      </form>
+    
+    </div>
+  </div>
+
+
+
+
+
+<%- include("partials/footer") -%>

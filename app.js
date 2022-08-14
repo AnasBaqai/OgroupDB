@@ -1,0 +1,176 @@
+//jshint esversion:6
+const express = require("express");
+const bodyParser = require("body-parser");
+const ejs = require("ejs");
+const mongoose = require("mongoose");
+const _ = require("lodash");
+const app = express();
+app.use(bodyParser.urlencoded({ extended: true }));
+app.set('view engine', 'ejs')
+app.use(express.static("public"));
+
+mongoose.connect("mongodb://localhost:27017/OgroupStudentsDB");
+
+
+const testsSchema = new mongoose.Schema({
+    date: {
+        type: String,
+        required: [true, "please enter Date"],
+    },
+    category: {
+        type: String,
+        required: [true, "please enter category"],
+    },
+    title: {
+        type: String,
+        required: [true, "please enter course name"],
+    },
+    obtainedMarks: {
+        type: Number,
+        required: [true, "please enter obtained marks"]
+    },
+    totalMarks: {
+        type: Number,
+        required: [true, "please enter total marks"]
+    }
+});
+const studentsSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: [true, "please enter name"],
+    },
+    DOB: {
+        type: String,
+        required: [true, "please enter Date of Birth"],
+    },
+    address: String,
+    phoneNumber: String,
+    subjects: [testsSchema],
+
+});
+
+const Test = mongoose.model("Test", testsSchema);
+const Student = mongoose.model("Student", studentsSchema)
+
+
+
+
+app.get("/", function (req, res) {
+    res.render("home");
+})
+
+
+app.post("/", function (req, res) {
+    const newStudent = new Student({
+        name: _.lowerCase(req.body.studentName),
+        DOB: req.body.DOB,
+        address: _.lowerCase(req.body.address),
+        phoneNumber: _.lowerCase(req.body.phoneNumber),
+    })
+    newStudent.save();
+    res.redirect("/");
+})
+
+app.get("/entry", function (req, res) {
+    res.render("testEntry")
+})
+
+app.post("/entry", function (req, res) {
+    const newTestEntry = new Test({
+        date: req.body.testDate,
+        category: _.lowerCase(req.body.category),
+        title: _.lowerCase(req.body.subjectName),
+        obtainedMarks: req.body.marks,
+        totalMarks: req.body.totalMarks,
+    })
+    console.log(req.body.studentName);
+    Student.findOneAndUpdate(
+        { name: _.lowerCase(req.body.studentName) },
+        { "$push": { "subjects": newTestEntry } },
+        function (err) {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log("entered successfully");
+            }
+        }
+    )
+
+    res.redirect("/entry");
+})
+
+app.get("/find", function (req, res) {
+    res.render("find");
+})
+
+app.post("/find", function (req, res) {
+
+    res.redirect("/find/" + req.body.studentName)
+})
+app.get("/find/:studentName", function (req, res) {
+
+    stdName = _.lowerCase(req.params.studentName);
+    Student.findOne({ name: stdName }, function (err, foundStudent) {
+        if (foundStudent) {
+            if (err) {
+                console.log(err);
+            } else {
+                res.render("foundSpec", { student: foundStudent });
+            }
+        }else{
+            res.send("<h1> student Not Found.")
+            
+        }
+    })
+})
+app.get("/findALL", function (req, res) {
+    Student.find({}, function (err, foundStudents) {
+        if (err) {
+            console.log(err);
+        } else {
+            res.render("findALL", { studentsList: foundStudents });
+        }
+    })
+})
+
+// app.get("/findALL/:studentName",function(req,res){
+//     const studentName= _.lowerCase(req.params.studentName);
+
+//     Student.findOne({name:studentName},function(err,foundStudent){
+//         if(err){
+//             console.log(err);
+//         }else{
+//             res.render("foundSpec",{student:foundStudent});
+//         }
+//     })
+
+
+// })
+
+app.post("/delete", function (req, res) {
+
+    Student.findOneAndUpdate({ name: req.body.studentName },
+        { $pull: { subjects: { _id: req.body.subjectName } } },
+        function (err, foundArray) {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log("deleted successfully")
+                res.redirect("/find/" + req.body.studentName)
+            }
+        })
+})
+
+
+app.get("/delete/:studentName", function (req, res) {
+    Student.deleteOne({ name: req.params.studentName }, function (err) {
+        if (err) {
+            console.log(err);
+        } else {
+            res.redirect("/findALL")
+        }
+    })
+})
+app.listen(3000, function (req, res) {
+    console.log("server is running at port 3000");
+})

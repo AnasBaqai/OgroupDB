@@ -1,0 +1,51 @@
+
+<%- include("partials/header") -%>
+
+<div class="details">
+    
+<h1><%= student.name %></h1>
+<h3 class="muted-text"> <%= student.DOB %></h3>
+<h3 class="muted-text"> <%= student.address %></h3>
+<h3 class="muted-text"> <%= student.phoneNumber %></h3>
+
+</div>
+
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Subject</th>
+        <th scope="col">Category</th>
+        <th scope="col">Date</th>
+        <th scope="col">Obtained Marks</th>
+        <th scope="col">Total Marks</th>
+        <th scope="col">Delete</th>
+        <!-- <th scope="col">Edit</th> -->
+
+      </tr>
+    </thead>
+    <tbody>
+<% student.subjects.forEach(function(subject){ %>
+    <tr>
+        <th scope="row"><%= subject.title %></th>
+        <td><%= subject.category %></td>
+        <td><%= subject.date %></td>
+        <td><%= subject.obtainedMarks %></td>
+        <td><%= subject.totalMarks %></td>
+        <td>
+            <!-- <a  href="/delete/<%=student.name%>" class="btn btn-dark btn-md" role="button" id="print">Delete</a> -->
+            <form action="/delete" method="post">
+                <button  name="subjectName" value="<%=subject._id%>" class="btn btn-dark btn-md" role="button" id="print"><i class="fa-solid fa-delete-left"></i></button>
+                <input type="hidden" name="studentName" value="<%=student.name%>">
+            </form>
+        </td>
+        <!-- <td> <a href="" class="btn btn-sm btn-primary" id="print"><i class="fa-solid fa-pen-to-square"></i></a></td> -->
+      </tr>
+
+<% }) %>
+
+</tbody>
+</table>
+
+<button id="print" onclick="window.print()" class="btn btn-lg btn-dark my-5">PRINT <i class="fa-solid fa-print fa-lg"></i></button>
+
+<%- include("partials/footer") -%>

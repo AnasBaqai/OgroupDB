@@ -1,0 +1,40 @@
+body{
+    
+    background-image: -webkit-linear-gradient(65deg, #66BFBF 30%,#F9F2ED 60%);
+    min-height: 38.75rem;
+}
+
+nav{
+    padding-bottom: 10%;
+   background-color: #212121;
+}
+
+  .bg-glass {
+    background-color: hsla(0, 0%, 100%, 0.9) !important;
+    backdrop-filter: saturate(200%) blur(25px);
+  }
+  
+  .nav-cont{
+    padding-left:  5rem;
+    padding-right: 6.875rem;
+    padding-top: 1rem;
+    padding-bottom: 2rem;
+    
+}
+
+.nav-link{
+    margin-right: 2rem;
+}
+
+
+.details{
+    margin: 2% 2% 5% 2%;
+    padding: 2%;
+}
+
+
+@media print {
+    #print{
+        display: none;
+    }
+}

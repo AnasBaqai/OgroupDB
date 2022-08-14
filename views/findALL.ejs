@@ -1,0 +1,41 @@
+<%- include("partials/header") -%>
+<div class="details">
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">name</th>
+        <th scope="col">DOB</th>
+        <th scope="col">Address</th>
+        <th scope="col">Phone Number</th>
+        <th scope="col">Information</th>
+        <th scope="col">delete</th>
+      </tr>
+    </thead>
+    <tbody>
+<% studentsList.forEach(function(student){ %>
+    <tr>
+        <th scope="row"><%= student._id %></th>
+        <td><%= student.name %></td>
+        <td><%= student.DOB %></td>
+        <td><%= student.address %></td>
+        <td><%= student.phoneNumber %></td>
+        <!-- <td><a href="/findALL/<%=student.name%>">see more</a></td> -->
+        <td>
+            <form action="/find" method="post">
+                <input type="hidden" name="studentName" value="<%=student.name%>">
+                <button type="submit" class="btn btn-sm btn-dark">see more</button>
+            </form>
+        </td>
+        <td>
+            <a class="btn btn-md btn-dark" role="button"  href="/delete/<%=student.name%>"><i class="fa-solid fa-delete-left fa-lg"></i></a>
+        </td>
+      </tr>
+
+<% }) %>
+
+</tbody>
+</table>
+</div>
+
+<%- include("partials/footer") -%>
