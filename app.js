@@ -53,7 +53,7 @@ const Test = mongoose.model("Test", testsSchema);
 const Student = mongoose.model("Student", studentsSchema)
 
 
-
+/////routes
 
 app.get("/", function (req, res) {
     res.render("home");
