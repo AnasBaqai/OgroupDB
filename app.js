@@ -216,8 +216,8 @@ app.get("/findALL", function (req, res) {
 
 app.post("/delete", function (req, res) {
 
-    Student.findOneAndUpdate({ name: req.body.studentName },
-        { $pull: { subjects: { _id: req.body.subjectName } } },
+    Student.findOneAndUpdate({ _id: req.body.studentID },
+        { $pull: { subjects: { _id: req.body.subjectID } } },
         function (err, foundArray) {
             if (err) {
                 console.log(err);
