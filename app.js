@@ -145,9 +145,7 @@ app.post("/entry", function (req, res) {
         newTestEntry.save();
     }
 
-    if(_.lowerCase(req.body.studentName)==="" ){
-        return res.send("<h1>Please enter student name</h1>")
-    }
+    
     Student.findOneAndUpdate(
         { name: _.lowerCase(req.body.studentName) },
         { "$push": { "subjects": newTestEntry } },
