@@ -106,21 +106,24 @@ app.post("/entry", function (req, res) {
         let calculatedGrade = (req.body.marks / req.body.totalMarks) * 100;
         console.log(calculatedGrade);
     
-            if(calculatedGrade > 79.99){
+            if(calculatedGrade >= 80){
+                grade = "A1";
+                
+            }
+            else if (calculatedGrade >= 70 && calculatedGrade<=79){
                 grade = "A";
                 
             }
-            else if (calculatedGrade > 69.99 && calculatedGrade<80){
+            else if (calculatedGrade >= 60 && calculatedGrade<=69){ 
                 grade = "B";
-                
-            }
-            else if (calculatedGrade > 59.99 && calculatedGrade<70){ 
-                grade = "C";
             
             }
-            else if (calculatedGrade > 49.99 && calculatedGrade<60){
-                grade = "D";
+            else if (calculatedGrade >=40  && calculatedGrade<=59){
+                grade = "C";
                 
+            }
+            else if(calculatedGrade>=33  && calculatedGrade<=49){
+                grade="D"
             }
             else{
                 grade="F"
@@ -138,20 +141,27 @@ app.post("/entry", function (req, res) {
         newTestEntry.save();
     }
 
-
+    if(_.lowerCase(req.body.studentName)==="" ){
+        return res.send("<h1>Please enter student name</h1>")
+    }
     Student.findOneAndUpdate(
         { name: _.lowerCase(req.body.studentName) },
         { "$push": { "subjects": newTestEntry } },
-        function (err) {
+        function (err,foundStudent) {
             if (err) {
                 console.log(err);
             } else {
+                if(foundStudent){
                 console.log("entered successfully");
+                res.redirect("/entry");
+                }else{
+                    res.send("<h1>no student found<h1>");
+                }
             }
         }
     )
 
-    res.redirect("/entry");
+   
 })
 
 app.get("/find", function (req, res) {
