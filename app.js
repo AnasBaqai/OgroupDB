@@ -221,7 +221,7 @@ app.post("/entry", function (req, res) {
             obtainedMarks: req.body.marks,
             totalMarks: req.body.totalMarks,
             grade: grade,
-            percantage:calculatedGrade+"%",
+            percantage:calculatedGrade.toFixed(3)+"%",
         })
         newTestEntry.save();
     }
