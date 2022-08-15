@@ -177,6 +177,7 @@ app.post("/find", function (req, res) {
 app.get("/find/:studentID", function (req, res) {
 
     stdID = _.lowerCase(req.params.studentID);
+    console.log(stdID);
     Student.findOne({ _id: stdID }, function (err, foundStudent) {
         if (foundStudent) {
             if (err) {
@@ -215,7 +216,7 @@ app.get("/findALL", function (req, res) {
 // })
 
 app.post("/delete", function (req, res) {
-
+    console.log("logging from /delete"+req.body.studentID);
     Student.findOneAndUpdate({ _id: req.body.studentID },
         { $pull: { subjects: { _id: req.body.subjectID } } },
         function (err, foundArray) {
@@ -223,17 +224,19 @@ app.post("/delete", function (req, res) {
                 console.log(err);
             } else {
                 console.log("deleted successfully")
-                res.redirect("/find/" + req.body.studentName)
+                res.redirect("/find/" + req.body.studentID)
             }
         })
 })
 
 
-app.get("/delete/:studentName", function (req, res) {
-    Student.deleteOne({ name: req.params.studentName }, function (err) {
+app.get("/delete/:studentID", function (req, res) {
+    console.log("loggin id from find all delete req :"+req.params.studentID)
+    Student.deleteOne({ _id: req.params.studentID }, function (err) {
         if (err) {
             console.log(err);
         } else {
+            console.log("record deleted successfully");
             res.redirect("/findALL")
         }
     })
