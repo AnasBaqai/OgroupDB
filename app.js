@@ -7,12 +7,7 @@ const _ = require("lodash");
 const session = require("express-session");
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
-const conf=require( __dirname+ "/confirm.js")
-const readline = require("readline")
-const interface = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
+
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs')
@@ -318,15 +313,8 @@ app.post("/delete", function (req, res) {
   
 })
 
-// function myFunction () {
-//     let ans =prompt.confirm("Are you sure you want to delete!");
-//     if ( ans === true) {
-//       return true
-//     } else {
-//       return false
-//     }
-    
-//   }
+
+
  
 app.get("/delete/:studentID", function (req, res) {
     console.log("loggin id from find all delete req :" + req.params.studentID)
