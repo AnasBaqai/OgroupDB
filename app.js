@@ -117,6 +117,8 @@ app.get("/", function (req, res) {
 app.post("/", function (req, res) {
   if(req.body.username==="admin" && req.body.password==="admin"){
     res.redirect("/register");
+  }else{
+    res.redirect("/");
   }
 
 //const newUser= new User({
