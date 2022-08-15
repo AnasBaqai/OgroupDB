@@ -4,39 +4,39 @@ const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const mongoose = require("mongoose");
 const _ = require("lodash");
-const session = require("express-session");
-const passport = require("passport");
-const passportLocalMongoose = require("passport-local-mongoose");
+// const session = require("express-session");
+// const passport = require("passport");
+// const passportLocalMongoose = require("passport-local-mongoose");
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs')
 app.use(express.static("public"));
 
-app.use(session({
-    secret: "we are friends",
-    resave: false,
-    saveUninitialized: false,
-})
-);
+// app.use(session({
+//     secret: "we are friends",
+//     resave: false,
+//     saveUninitialized: false,
+// })
+// );
 
 
 
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 mongoose.connect("mongodb+srv://anasbaqai:An12as34@cluster0.uuocn2n.mongodb.net/OgroupStudentsDB");
 
-const usersSchema = new mongoose.Schema({
-    username: String,
-    password: String,
-});
-usersSchema.plugin(passportLocalMongoose);
-const User = mongoose.model("User", usersSchema)
+// const usersSchema = new mongoose.Schema({
+//     username: String,
+//     password: String,
+// });
+// usersSchema.plugin(passportLocalMongoose);
+// const User = mongoose.model("User", usersSchema)
 
-passport.use(User.createStrategy());
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+// passport.use(User.createStrategy());
+// passport.serializeUser(User.serializeUser());
+// passport.deserializeUser(User.deserializeUser());
 
 const testsSchema = new mongoose.Schema({
     date: {
@@ -93,19 +93,19 @@ const studentsSchema = new mongoose.Schema({
 const Test = mongoose.model("Test", testsSchema);
 const Student = mongoose.model("Student", studentsSchema)
 
-function createDefaultUser(name){
-    User.findOne({username:name},function(err,foundUser){
-        if(err){
-            console.log(err);
-        }else{
-            if(!foundUser){
-                return false;
-            }else{
-                return true;
-            }
-        }
-    })
-}
+// function createDefaultUser(name){
+//     User.findOne({username:name},function(err,foundUser){
+//         if(err){
+//             console.log(err);
+//         }else{
+//             if(!foundUser){
+//                 return false;
+//             }else{
+//                 return true;
+//             }
+//         }
+//     })
+// }
 
 
 
@@ -115,37 +115,38 @@ app.get("/", function (req, res) {
     res.render("login");
 })
 app.post("/", function (req, res) {
-//   if(req.body.username==="admin" && req.body.password==="admin"){
-//     res.redirect("/register");
-//   }
+  if(req.body.username==="admin" && req.body.password==="admin"){
+    res.redirect("/register");
+  }
 
-const newUser= new User({
-    username:req.body.username,
-    password:req.body.password,
-})
-if(!createDefaultUser(req.body.username))
-{
-    newUser.save();
-}
-req.login(newUser,function(err){
-    if(err){
-        console.log("err");
-    }else{
-        passport.authenticate("local")(req,res,function(){
-            res.redirect("/register");
-        })
-    }
-})
+//const newUser= new User({
+//     username:req.body.username,
+//     password:req.body.password,
+// })
+// if(!createDefaultUser(req.body.username))
+// {
+//     newUser.save();
+// }
+// req.login(newUser,function(err){
+//     if(err){
+//         console.log("err");
+//     }else{
+//         passport.authenticate("local")(req,res,function(){
+//             res.redirect("/register");
+//         })
+//     }
+// })
 
 
    
 })
 app.get("/register", function (req, res) {
-    if (req.isAuthenticated()) {
-        res.render("home");
-    } else {
-        res.redirect("/");
-    }
+    // if (req.isAuthenticated()) {
+    //     res.render("home");
+    // } else {
+    //     res.redirect("/");
+    // }
+    res.render("home");
 
 })
 
