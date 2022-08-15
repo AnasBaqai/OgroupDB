@@ -4,13 +4,44 @@ const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const mongoose = require("mongoose");
 const _ = require("lodash");
+const session = require("express-session");
+const passport = require("passport");
+const passportLocalMongoose = require("passport-local-mongoose");
+const conf=require( __dirname+ "/confirm.js")
+const readline = require("readline")
+const interface = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs')
 app.use(express.static("public"));
 
+app.use(session({
+    secret: "we are friends",
+    resave: false,
+    saveUninitialized: false,
+})
+);
+
+
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 mongoose.connect("mongodb+srv://anasbaqai:An12as34@cluster0.uuocn2n.mongodb.net/OgroupStudentsDB");
 
+const usersSchema = new mongoose.Schema({
+    username: String,
+    password: String,
+});
+usersSchema.plugin(passportLocalMongoose);
+const User = mongoose.model("User", usersSchema)
+
+passport.use(User.createStrategy());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 const testsSchema = new mongoose.Schema({
     date: {
@@ -38,9 +69,10 @@ const testsSchema = new mongoose.Schema({
         // required: [true, "please enter total marks"]
     },
     grade: String,
+    percantage:String,
 });
 const studentsSchema = new mongoose.Schema({
-    _id:{
+    _id: {
         type: String,
         // required: [true, "please enter name"],
     },
@@ -66,15 +98,64 @@ const studentsSchema = new mongoose.Schema({
 const Test = mongoose.model("Test", testsSchema);
 const Student = mongoose.model("Student", studentsSchema)
 
+function createDefaultUser(name){
+    User.findOne({username:name},function(err,foundUser){
+        if(err){
+            console.log(err);
+        }else{
+            if(!foundUser){
+                return false;
+            }else{
+                return true;
+            }
+        }
+    })
+}
+
+
 
 /////routes
 
 app.get("/", function (req, res) {
-    res.render("home");
+    res.render("login");
+})
+app.post("/", function (req, res) {
+//   if(req.body.username==="admin" && req.body.password==="admin"){
+//     res.redirect("/register");
+//   }
+
+const newUser= new User({
+    username:req.body.username,
+    password:req.body.password,
+})
+if(!createDefaultUser(req.body.username))
+{
+    newUser.save();
+}
+req.login(newUser,function(err){
+    if(err){
+        console.log("err");
+    }else{
+        passport.authenticate("local")(req,res,function(){
+            res.redirect("/register");
+        })
+    }
 })
 
 
-app.post("/", function (req, res) {
+   
+})
+app.get("/register", function (req, res) {
+    if (req.isAuthenticated()) {
+        res.render("home");
+    } else {
+        res.redirect("/");
+    }
+
+})
+
+
+app.post("/register", function (req, res) {
     const newStudent = new Student({
         name: _.lowerCase(req.body.studentName),
         _id: _.lowerCase(req.body.id),
@@ -84,11 +165,11 @@ app.post("/", function (req, res) {
         branchName: _.lowerCase(req.body.branchName),
     })
     newStudent.save();
-    res.redirect("/");
+    res.redirect("/register");
 })
 
 app.get("/entry", function (req, res) {
-    res.render("testEntry", {student:""})
+    res.render("testEntry", { student: "" })
 })
 
 app.post("/entry", function (req, res) {
@@ -103,35 +184,36 @@ app.post("/entry", function (req, res) {
             status: req.body.status,
             obtainedMarks: 0,
             totalMarks: req.body.totalMarks,
-            grade:"F",
+            grade: "F",
+            percantage:"0%"
         })
         newTestEntry.save();
     } else {
         let calculatedGrade = (req.body.marks / req.body.totalMarks) * 100;
         console.log(calculatedGrade);
-    
-            if(calculatedGrade >= 80){
-                grade = "A1";
-                
-            }
-            else if (calculatedGrade >= 70 && calculatedGrade<=79){
-                grade = "A";
-                
-            }
-            else if (calculatedGrade >= 60 && calculatedGrade<=69){ 
-                grade = "B";
-            
-            }
-            else if (calculatedGrade >=40  && calculatedGrade<=59){
-                grade = "C";
-                
-            }
-            else if(calculatedGrade>=33  && calculatedGrade<=49){
-                grade="D"
-            }
-            else{
-                grade="F"
-            
+
+        if (calculatedGrade >= 80) {
+            grade = "A1";
+
+        }
+        else if (calculatedGrade >= 70 && calculatedGrade <= 79) {
+            grade = "A";
+
+        }
+        else if (calculatedGrade >= 60 && calculatedGrade <= 69) {
+            grade = "B";
+
+        }
+        else if (calculatedGrade >= 40 && calculatedGrade <= 59) {
+            grade = "C";
+
+        }
+        else if (calculatedGrade >= 33 && calculatedGrade <= 49) {
+            grade = "D"
+        }
+        else {
+            grade = "F"
+
         }
         var newTestEntry = new Test({
             date: req.body.testDate,
@@ -140,7 +222,8 @@ app.post("/entry", function (req, res) {
             status: _.lowerCase(req.body.status),
             obtainedMarks: req.body.marks,
             totalMarks: req.body.totalMarks,
-            grade:grade,
+            grade: grade,
+            percantage:calculatedGrade+"%",
         })
         newTestEntry.save();
     }
@@ -149,21 +232,21 @@ app.post("/entry", function (req, res) {
     Student.findOneAndUpdate(
         { _id: _.lowerCase(req.body.studentID) },
         { "$push": { "subjects": newTestEntry } },
-        function (err,foundStudent) {
+        function (err, foundStudent) {
             if (err) {
                 console.log(err);
             } else {
-                if(foundStudent){
-                console.log("entered successfully");
-                res.redirect("/entry");
-                }else{
+                if (foundStudent) {
+                    console.log("entered successfully");
+                    res.redirect("/entry");
+                } else {
                     res.send("<h1>no student found<h1>");
                 }
             }
         }
     )
 
-   
+
 })
 
 app.get("/find", function (req, res) {
@@ -215,8 +298,11 @@ app.get("/findALL", function (req, res) {
 
 // })
 
+
 app.post("/delete", function (req, res) {
-    console.log("logging from /delete"+req.body.studentID);
+
+    console.log("logging from /delete" + req.body.studentID);
+
     Student.findOneAndUpdate({ _id: req.body.studentID },
         { $pull: { subjects: { _id: req.body.subjectID } } },
         function (err, foundArray) {
@@ -227,11 +313,24 @@ app.post("/delete", function (req, res) {
                 res.redirect("/find/" + req.body.studentID)
             }
         })
+
+       
+  
 })
 
-
+// function myFunction () {
+//     let ans =prompt.confirm("Are you sure you want to delete!");
+//     if ( ans === true) {
+//       return true
+//     } else {
+//       return false
+//     }
+    
+//   }
+ 
 app.get("/delete/:studentID", function (req, res) {
-    console.log("loggin id from find all delete req :"+req.params.studentID)
+    console.log("loggin id from find all delete req :" + req.params.studentID)
+   
     Student.deleteOne({ _id: req.params.studentID }, function (err) {
         if (err) {
             console.log(err);
@@ -240,9 +339,11 @@ app.get("/delete/:studentID", function (req, res) {
             res.redirect("/findALL")
         }
     })
+   
+
 })
 
-app.post("/id",function(req,res){
+app.post("/id", function (req, res) {
     Student.findOne({ _id: _.lowerCase(req.body.id) }, function (err, foundStudent) {
         if (foundStudent) {
             if (err) {

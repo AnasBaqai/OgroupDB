@@ -30,6 +30,7 @@
           <th scope="col">Obtained Marks</th>
           <th scope="col">Total Marks</th>
           <th scope="col">Grade</th>
+          <th scope="col">%</th>
           <th scope="col">Delete</th>
         
 
@@ -60,9 +61,12 @@
                <%= subject.grade %>
             </td>
             <td>
+              <%= subject.percantage %>
+            </td>
+            <td>
     
               <form action="/delete" method="post">
-                <button name="subjectID" value="<%=subject._id%>" class="btn btn-dark btn-md" role="button"
+                <button name="subjectID" value="<%=subject._id%>" class="btn btn-dark btn-md delete" role="button"
                   id="print"><i class="fa-solid fa-delete-left"></i></button>
                 <input type="hidden" name="studentID" value="<%=student._id%>">
               </form>
