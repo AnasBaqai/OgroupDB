@@ -198,6 +198,9 @@ app.post("/entry", function (req, res) {
         })
         newTestEntry.save();
     } else {
+        if(req.body.marks>req.body.totalMarks){
+            return res.send("<h1> OBTAINED MARKS CAN NOT BE GREATER THAN TOTAL MARKS</h1>");
+        }
         let calculatedGrade = (req.body.marks / req.body.totalMarks) * 100;
         console.log(calculatedGrade);
 
