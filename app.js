@@ -183,81 +183,87 @@ app.get("/entry", function (req, res) {
 
 app.post("/entry", function (req, res) {
     let grade = "";
-    if (req.body.status === "notAttempted") {
-
-
-        var newTestEntry = new Test({
-            date: req.body.testDate,
-            category: _.lowerCase(req.body.category),
-            title: _.lowerCase(req.body.subjectName),
-            status: req.body.status,
-            obtainedMarks: 0,
-            totalMarks: req.body.totalMarks,
-            grade: "F",
-            percantage: "0%"
-        })
-        newTestEntry.save();
-    } else {
-        if(req.body.marks>req.body.totalMarks){
-            return res.send("<h1> OBTAINED MARKS CAN NOT BE GREATER THAN TOTAL MARKS</h1>");
+    let obtMarks = Number(req.body.marks)
+    let totMArks = Number(req.body.totalMarks);
+    console.log(req.body.marks);
+    console.log(req.body.totalMarks);
+    if(totMArks>= obtMarks){
+       
+         if (req.body.status === "notAttempted") {
+            var newTestEntry = new Test({
+                date: req.body.testDate,
+                category: _.lowerCase(req.body.category),
+                title: _.lowerCase(req.body.subjectName),
+                status: req.body.status,
+                obtainedMarks: 0,
+                totalMarks: req.body.totalMarks,
+                grade: "F",
+                percantage: "0%"
+            })
+            newTestEntry.save();
+        } else {
+           
+            let calculatedGrade = (req.body.marks / req.body.totalMarks) * 100;
+            console.log(calculatedGrade);
+    
+            if (calculatedGrade >= 80) {
+                grade = "A1";
+    
+            }
+            else if (calculatedGrade >= 70 && calculatedGrade <= 79) {
+                grade = "A";
+    
+            }
+            else if (calculatedGrade >= 60 && calculatedGrade <= 69) {
+                grade = "B";
+    
+            }
+            else if (calculatedGrade >= 40 && calculatedGrade <= 59) {
+                grade = "C";
+    
+            }
+            else if (calculatedGrade >= 33 && calculatedGrade <= 49) {
+                grade = "D"
+            }
+            else {
+                grade = "F"
+    
+            }
+            var newTestEntry = new Test({
+                date: req.body.testDate,
+                category: _.lowerCase(req.body.category),
+                title: _.lowerCase(req.body.subjectName),
+                status: _.lowerCase(req.body.status),
+                obtainedMarks: req.body.marks,
+                totalMarks: req.body.totalMarks,
+                grade: grade,
+                percantage: calculatedGrade.toFixed(3) + "%",
+            })
+            newTestEntry.save();
         }
-        let calculatedGrade = (req.body.marks / req.body.totalMarks) * 100;
-        console.log(calculatedGrade);
-
-        if (calculatedGrade >= 80) {
-            grade = "A1";
-
-        }
-        else if (calculatedGrade >= 70 && calculatedGrade <= 79) {
-            grade = "A";
-
-        }
-        else if (calculatedGrade >= 60 && calculatedGrade <= 69) {
-            grade = "B";
-
-        }
-        else if (calculatedGrade >= 40 && calculatedGrade <= 59) {
-            grade = "C";
-
-        }
-        else if (calculatedGrade >= 33 && calculatedGrade <= 49) {
-            grade = "D"
-        }
-        else {
-            grade = "F"
-
-        }
-        var newTestEntry = new Test({
-            date: req.body.testDate,
-            category: _.lowerCase(req.body.category),
-            title: _.lowerCase(req.body.subjectName),
-            status: _.lowerCase(req.body.status),
-            obtainedMarks: req.body.marks,
-            totalMarks: req.body.totalMarks,
-            grade: grade,
-            percantage: calculatedGrade.toFixed(3) + "%",
-        })
-        newTestEntry.save();
-    }
-
-    console.log(_.lowerCase(req.body.studentID))
-    Student.findOneAndUpdate(
-        { _id: _.lowerCase(req.body.studentID) },
-        { "$push": { "subjects": newTestEntry } },
-        function (err, foundStudent) {
-            if (err) {
-                console.log(err);
-            } else {
-                if (foundStudent) {
-                    console.log("entered successfully");
-                    res.redirect("/entry");
+    
+        console.log(_.lowerCase(req.body.studentID))
+        Student.findOneAndUpdate(
+            { _id: _.lowerCase(req.body.studentID) },
+            { "$push": { "subjects": newTestEntry } },
+            function (err, foundStudent) {
+                if (err) {
+                    console.log(err);
                 } else {
-                    res.send("<h1>no student found<h1>");
+                    if (foundStudent) {
+                        console.log("entered successfully");
+                        res.redirect("/entry");
+                    } else {
+                        res.send("<h1>no student found<h1>");
+                    }
                 }
             }
-        }
-    )
-
+        )
+    
+    }else{
+        res.send("<h1> OBTAINED MARKS CAN NOT BE GREATER THAN TOTAL MARKS</h1>");
+    }
+    
 
 })
 
