@@ -64,7 +64,7 @@ const testsSchema = new mongoose.Schema({
         // required: [true, "please enter total marks"]
     },
     grade: String,
-    percantage:String,
+    percantage: String,
 });
 const studentsSchema = new mongoose.Schema({
     _id: {
@@ -115,32 +115,32 @@ app.get("/", function (req, res) {
     res.render("login");
 })
 app.post("/", function (req, res) {
-  if(req.body.username==="admin" && req.body.password==="admin"){
-    res.redirect("/register");
-  }else{
-    res.redirect("/");
-  }
+    if (req.body.username === "admin" && req.body.password === "admin") {
+        res.redirect("/register");
+    } else {
+        res.redirect("/");
+    }
 
-//const newUser= new User({
-//     username:req.body.username,
-//     password:req.body.password,
-// })
-// if(!createDefaultUser(req.body.username))
-// {
-//     newUser.save();
-// }
-// req.login(newUser,function(err){
-//     if(err){
-//         console.log("err");
-//     }else{
-//         passport.authenticate("local")(req,res,function(){
-//             res.redirect("/register");
-//         })
-//     }
-// })
+    //const newUser= new User({
+    //     username:req.body.username,
+    //     password:req.body.password,
+    // })
+    // if(!createDefaultUser(req.body.username))
+    // {
+    //     newUser.save();
+    // }
+    // req.login(newUser,function(err){
+    //     if(err){
+    //         console.log("err");
+    //     }else{
+    //         passport.authenticate("local")(req,res,function(){
+    //             res.redirect("/register");
+    //         })
+    //     }
+    // })
 
 
-   
+
 })
 app.get("/register", function (req, res) {
     // if (req.isAuthenticated()) {
@@ -162,8 +162,19 @@ app.post("/register", function (req, res) {
         phoneNumber: _.lowerCase(req.body.phoneNumber),
         branchName: _.lowerCase(req.body.branchName),
     })
-    newStudent.save();
-    res.redirect("/register");
+    Student.findById(_.lowerCase(req.body.id), function (err, foundStudent) {
+        if (err) {
+            console.log(err);
+        } else {
+            if (!foundStudent) {
+                newStudent.save();
+                res.redirect("/register");
+            }else{
+                res.send("Student with this id already exists");
+            }
+        }
+    })
+
 })
 
 app.get("/entry", function (req, res) {
@@ -183,7 +194,7 @@ app.post("/entry", function (req, res) {
             obtainedMarks: 0,
             totalMarks: req.body.totalMarks,
             grade: "F",
-            percantage:"0%"
+            percantage: "0%"
         })
         newTestEntry.save();
     } else {
@@ -221,7 +232,7 @@ app.post("/entry", function (req, res) {
             obtainedMarks: req.body.marks,
             totalMarks: req.body.totalMarks,
             grade: grade,
-            percantage:calculatedGrade.toFixed(3)+"%",
+            percantage: calculatedGrade.toFixed(3) + "%",
         })
         newTestEntry.save();
     }
@@ -312,16 +323,16 @@ app.post("/delete", function (req, res) {
             }
         })
 
-       
-  
+
+
 })
 
 
 
- 
+
 app.get("/delete/:studentID", function (req, res) {
     console.log("loggin id from find all delete req :" + req.params.studentID)
-   
+
     Student.deleteOne({ _id: req.params.studentID }, function (err) {
         if (err) {
             console.log(err);
@@ -330,7 +341,7 @@ app.get("/delete/:studentID", function (req, res) {
             res.redirect("/findALL")
         }
     })
-   
+
 
 })
 
