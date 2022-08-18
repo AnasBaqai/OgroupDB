@@ -369,6 +369,29 @@ app.post("/id", function (req, res) {
     })
 })
 
+app.get("/openSearch",function(req,res){
+    res.render("openSearch");
+})
+
+app.post("/openSearch",function(req,res){
+    res.redirect("/openSearch/" + _.lowerCase(req.body.studentID))
+})
+app.get("/openSearch/:studentID",function(req,res){
+    stdID = _.lowerCase(req.params.studentID);
+    console.log(stdID);
+    Student.findOne({ _id: stdID }, function (err, foundStudent) {
+        if (foundStudent) {
+            if (err) {
+                console.log(err);
+            } else {
+                res.render("openRecord", { student: foundStudent });
+            }
+        } else {
+            res.send("<h1> Record Not Found Enter Valid ID.")
+
+        }
+    })
+})
 app.listen(process.env.PORT || 3000, function (req, res) {
     console.log("server is running at port 3000");
 })
