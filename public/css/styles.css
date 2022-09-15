@@ -35,9 +35,6 @@ nav{
     padding: 2%;
 }
 
-.card{
-    width: 28rem;
-}
 
 @media print {
     #print{
