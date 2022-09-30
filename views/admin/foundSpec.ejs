@@ -1,4 +1,4 @@
-<%- include("partials/header") -%>
+<%- include("../partials/header") -%>
 
   <div class="details">
 
@@ -17,6 +17,10 @@
     <h3 class="text-muted">
       CLASS: <%= student.class %>
     </h3>
+    <h3 class="text-muted">
+      CLASS: <%= student.email %>
+    </h3>
+
 
   </div>
   <div class="details table-responsive">
@@ -83,4 +87,4 @@
   <button id="print" onclick="window.print()" class="btn btn-lg btn-dark my-5">PRINT <i
       class="fa-solid fa-print fa-lg"></i></button>
 
-  <%- include("partials/footer") -%>
+  <%- include("../partials/footer") -%>

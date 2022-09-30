@@ -1,4 +1,4 @@
-<%- include("partials/header") -%>
+<%- include("../partials/header") -%>
 
 
 
@@ -35,6 +35,7 @@
           <label class="form-label">Enter Phone Number</label>
           <input autocomplete="off" type="text" class="form-control" name="phoneNumber" >
         </div>
+        <input type="hidden" name="type" value="student">
         <button type="submit" class="btn btn-dark">Register <i class="fa-solid fa-id-card fa-lg"></i></button>
       </form>
 
@@ -45,4 +46,4 @@
 
 
 
-  <%- include("partials/footer") -%>
+  <%- include("../partials/footer") -%>
