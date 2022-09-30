@@ -7,9 +7,11 @@ const _ = require("lodash");
 const session = require("express-session");
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
+var path = require('path')
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
+app.set('views', path.join(__dirname, '../dist/views'))
 app.set('view engine', 'ejs')
 app.use(express.static("public"));
 
