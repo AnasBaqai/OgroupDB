@@ -115,7 +115,7 @@ const Student = mongoose.model("Student", studentsSchema)
 /////routes
 
 app.get("/", function (req, res) {
-    res.render("login");
+    res.sendFile(__dirname+"../dist/views/index.html");
 })
 app.post("/", function (req, res) {
     if (req.body.username === "admin" && req.body.password === "admin") {
