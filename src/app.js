@@ -25,8 +25,8 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// mongoose.connect("mongodb+srv://anasbaqai:An12as34@cluster0.uuocn2n.mongodb.net/OgroupStudentsDB");
-mongoose.connect("mongodb://localhost:27017/sqeDB");
+mongoose.connect("mongodb+srv://anasbaqai:An12as34@cluster0.uuocn2n.mongodb.net/OgroupStudentsDB");
+// mongoose.connect("mongodb://localhost:27017/sqeDB");
 
 const usersSchema = new mongoose.Schema({
     username: String,
