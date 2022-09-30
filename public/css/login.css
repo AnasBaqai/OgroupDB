@@ -28,7 +28,7 @@ h2 {
 p {
 	font-size: 14px;
 	font-weight: 100;
-	line-height: 20px;
+	line-height: 2rem;
 	letter-spacing: 0.5px;
 	margin: 20px 0 30px;
 }
@@ -254,5 +254,16 @@ footer a {
 .logo{
 	display: block;
 	
-	margin: 4rem auto;
+	margin: 4rem auto 1rem;
+}
+
+
+.logo-text{
+	padding: 7% 15%;
+	
+}
+
+
+.link-danger{
+	color:red;
 }
