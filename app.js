@@ -11,7 +11,7 @@ var path = require('path')
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
-app.set('views', path.join(__dirname, '../dist/views'))
+// app.set('views', path.join(__dirname, '../dist/views'))
 app.set('view engine', 'ejs')
 app.use(express.static("public"));
 
@@ -115,7 +115,7 @@ const Student = mongoose.model("Student", studentsSchema)
 /////routes
 
 app.get("/", function (req, res) {
-    res.sendFile(__dirname+"../dist/views/index.html");
+    res.render("login");
 })
 app.post("/", function (req, res) {
     if (req.body.username === "admin" && req.body.password === "admin") {
