@@ -25,8 +25,8 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// mongoose.connect("mongodb+srv://anasbaqai:An12as34@cluster0.uuocn2n.mongodb.net/OgroupStudentsDB");
-mongoose.connect("mongodb://localhost:27017/sqeDB");
+mongoose.connect("mongodb+srv://anasbaqai:An12as34@cluster0.uuocn2n.mongodb.net/OgroupStudentsDB");
+// mongoose.connect("mongodb://localhost:27017/sqeDB");
 
 const usersSchema = new mongoose.Schema({
     username: String,
@@ -52,7 +52,7 @@ const testsSchema = new mongoose.Schema({
 
 const attendanceSchema= new mongoose.Schema({
     pDate: String,
-    isPresent:Boolean,
+    isPresent:String,
 })
 
 const studentsSchema = new mongoose.Schema({
@@ -516,6 +516,23 @@ app.get("/student/home", (req, res) => {
 
 //     res.send("Updatted successfully");
 // })
+
+
+
+/****************************** ATTENDANCE ROUTE ******************************/
+app.get("/attendance",(req,res)=>{
+    if (req.isAuthenticated()) {
+        Student.find({}, function (err, foundStudents) {
+            if (err) {
+                console.log(err);
+            } else {
+                res.render("admin/attendance", { studentsList: foundStudents });
+            }
+        })
+    } else {
+        res.redirect("/");
+    }
+})
 
 /*********************************** LISTENER PORT ROUTE **************************************/
 
