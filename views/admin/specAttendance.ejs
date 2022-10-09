@@ -27,47 +27,23 @@
     <table class="table">
       <thead>
         <tr>
-          <th scope="col">Subject</th>
-          <th scope="col">Category</th>
-          <th scope="col">Date</th>
-          <th scope="col">status</th>
-          <th scope="col">Obtained Marks</th>
-          <th scope="col">Total Marks</th>
-          <th scope="col">Grade</th>
-          <th scope="col">%</th>
-          <th scope="col">Delete</th>
-        
+          <th scope="col">Date </th>
+          <th scope="col">Status</th>
+         
 
         </tr>
       </thead>
       <tbody>
-        <% student.subjects.forEach(function(subject){ %>
+        <% student.attendance.forEach(function(subject){ %>
           <tr>
             <th scope="row">
-              <%= subject.title %>
+              <%= subject.pDate %>
             </th>
             <td>
-              <%= subject.category %>
+              <%= subject.isPresent %>
             </td>
-            <td>
-              <%= subject.date %>
-            </td>
-            <td>
-              <%= subject.status %>
-            </td>
-            <td>
-              <%= subject.obtainedMarks %>
-            </td>
-            <td>
-              <%= subject.totalMarks %>
-            </td>
-            <td>
-               <%= subject.grade %>
-            </td>
-            <td>
-              <%= subject.percantage %>
-            </td>
-            <td>
+            
+            <!-- <td>
     
               <form action="/delete" method="post">
                 <button  name="subjectID" value="<%=subject._id%>" class="btn btn-dark btn-md delete" role="button" onclick="return confirm('Are you sure you want to delete this item?');"
@@ -75,7 +51,7 @@
                 <input type="hidden" name="studentID" value="<%=student._id%>">
               </form>
             </td>
-            
+             -->
           </tr>
 
           <% }) %>

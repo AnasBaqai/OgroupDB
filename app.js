@@ -71,7 +71,7 @@ const studentsSchema = new mongoose.Schema({
 const Test = mongoose.model("Test", testsSchema);
 const Student = mongoose.model("Student", studentsSchema)
 
-
+const Attendance= mongoose.model("Attendance",attendanceSchema);
 
 
 /******************************************ROUTES ******************************** */
@@ -533,6 +533,66 @@ app.get("/attendance",(req,res)=>{
         res.redirect("/");
     }
 })
+
+
+app.post("/attendance",(req,res)=>{
+    var categories= req.body.category;
+    var ids= req.body.id;
+    ids.forEach((id,index)=>{
+    
+
+        var newAttendance=new Attendance({
+            pDate:new Date().toLocaleDateString(),
+            isPresent:categories[index],
+        })
+ 
+        newAttendance.save();
+    
+        Student.findOneAndUpdate(
+            { _id: _.lowerCase(id) },
+            { "$push": { "attendance": newAttendance} },
+            function (err, foundStudent) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    if (foundStudent) {
+                        // console.log("entered successfully");
+                      
+                    } else {
+                        console.log("no student found");
+                    }
+                }
+            }
+        )
+
+    })
+
+    res.redirect("/attendance");
+})
+
+/*********************************** SPECIIFIC ATTENDANCE ROUTE **************************************/
+
+app.get("/attendance/:studentID", function (req, res) {
+    if (req.isAuthenticated()) {
+        stdID = _.lowerCase(req.params.studentID);
+        
+        Student.findOne({ _id: stdID }, function (err, foundStudent) {
+            if (foundStudent) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    res.render("admin/specAttendance", { student: foundStudent });
+                }
+            } else {
+                res.send("<h1> student Not Found.")
+
+            }
+        })
+    } else {
+        res.redirect("/");
+    }
+})
+
 
 /*********************************** LISTENER PORT ROUTE **************************************/
 

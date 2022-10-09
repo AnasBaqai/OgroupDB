@@ -1,57 +1,63 @@
 <%- include("../partials/header") -%>
 
-<div class="details">
-    <div class="table-responsive">
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">GR NO</th>
-            <th scope="col">name</th>
-            
-            <th scope="col">class</th>
-          
-            <th scope="col">Attendance</th>
-            
-          </tr>
-        </thead>
-        <tbody>
-          <% studentsList.forEach(function(student){ %>
+  <form action="/attendance" method="post">
+    <div class="details">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
             <tr>
-              <th scope="row">
-                <%= student._id %>
-              </th>
-              <td scope ="row">
-                <%= student.name %>
-              </td>
-              <td>
-                <%= student.class %>
-              </td>
-              <td>
-                <select class="form-control" name="category" size="1">
-                  <option value="P">P</option>
-                  <option value="A">A</option>
-                  
-                </select>
-              </td>
-              <td>
+              <th scope="col">GR NO</th>
+              <th scope="col">name</th>
+
+              <th scope="col">class</th>
+              
+              <th scope="col">Attendance</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <% studentsList.forEach(function(student){ %>
+              <tr>
+                <th scope="row">
+                  <%= student._id %>
+                </th>
+                <td scope="row">
+                  <%= student.name %>
+                </td>
+                <td>
+                  <%= student.class %>
+                </td>
+          
+                <td>
+                  <select class="form-control" name="category" size="1" style="width: 3rem;">
+                    <option value="P">P</option>
+                    <option value="A">A</option>
+                    <input type="hidden" name="id" value="<%= student._id %>">
+                  </select>
                 
-              </td>
-              <!-- <td><a href="/findALL/<%=student.name%>">see more</a></td> -->
-              <td>
-                <!-- <form action="/find" method="post">
+                </td>
+                <td>
+
+                </td>
+                <td><a class="btn btn-sm btn-dark" href="/attendance/<%=student._id%>">see more</a></td>
+                <!-- <td>
+                   <form action="/find" method="post">
                   <input type="hidden" name="studentID" value="<%=student._id%>">
                   <button type="submit" class="btn btn-sm btn-dark">see more</button>
-                </form> -->
-              </td>
-              <!-- <td>
+                </form
+                </td> -->
+                <!-- <td>
                 <a  class="delete btn btn-md btn-dark" onclick="return confirm('Are you sure you want to delete this item?');" role="button" href="/delete/<%=student._id%>"><i
                     class="fa-solid fa-delete-left fa-lg"></i></a>
               </td> -->
-            </tr>
+              </tr>
 
-            <% }) %>
+              <% }) %>
 
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
+    <button type="submit" class="btn btn-dark  my-3">SAVE</button>
+
+  </form>
