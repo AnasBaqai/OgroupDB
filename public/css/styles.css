@@ -4,6 +4,8 @@
 body{
     
     background-image: -webkit-linear-gradient(65deg, #66BFBF 30%,#F9F2ED 60%);
+    
+    /* background-image: -webkit-linear-gradient(65deg, #FF416C 30%,#F9F2ED 60%); */
     min-height: 38.75rem;
 }
 
