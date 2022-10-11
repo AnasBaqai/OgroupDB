@@ -539,95 +539,150 @@ app.get("/attendance", (req, res) => {
         res.redirect("/");
     }
 })
-
-
-app.post("/attendance", (req, res) => {
-
+app.post("/attendance",(req,res)=>{
     
-
-    var categories = req.body.category;
-    var ids = req.body.id;
+    var newAttendance = new Attendance({
+        pDate: new Date().toLocaleDateString(),
+        isPresent: req.body.category,
+    })
     let tDay = new Date().toLocaleDateString();
     var foundDate;
-    
-    Student.findById(_.lowerCase(ids[0]), (err, foundStudent) => {
-        if (err) {
-            return res.send(err);
+    Student.findById(_.lowerCase(req.body.studentID), (err, foundStudent) => {
+        if (foundStudent.attendance.length == 0) {
+            newAttendance.save();
+            Student.findOneAndUpdate(
+                { _id: _.lowerCase(req.body.studentID) },
+                { "$push": { "attendance": newAttendance } },
+                function (err, foundStudent) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        if (foundStudent) {
+                            console.log("entered successfully");
+                            res.redirect("/attendance");
+                        } else {
+                            res.send("<h1>no student found<h1>");
+                        }
+                    }
+                }
+            )
         } else {
-            if (foundStudent.attendance.length === 0) {
-               
-                ids.forEach((id, index) => {
-            
-
-                    var newAttendance = new Attendance({
-                        pDate: new Date().toLocaleDateString(),
-                        isPresent: categories[index],
-                    })
-
-                    newAttendance.save();
-
-                    Student.findOneAndUpdate(
-                        { _id: _.lowerCase(id) },
-                        { "$push": { "attendance": newAttendance } },
-                        function (err, foundStudent) {
-                            if (err) {
-                                console.log(err);
+            foundDate = foundStudent.attendance[foundStudent.attendance.length - 1].pDate;
+            if (foundDate === tDay) {
+                res.send("<h1> cannot enter twice in a day");
+            }else{
+                newAttendance.save();
+                Student.findOneAndUpdate(
+                    { _id: _.lowerCase(req.body.studentID) },
+                    { "$push": { "attendance": newAttendance } },
+                    function (err, foundStudent) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            if (foundStudent) {
+                                console.log("entered successfully");
+                                res.redirect("/attendance");
                             } else {
-                                if (foundStudent) {
-                                    // console.log("entered successfully");
-
-                                } else {
-                                    console.log("no student found");
-                                }
+                                res.send("<h1>no student found<h1>");
                             }
                         }
-                    )
-
-                })
-           
-                res.redirect("/attendance");
-            } else{
-                foundDate = foundStudent.attendance[foundStudent.attendance.length - 1].pDate;
-                if(foundDate === tDay) {
-                    res.send("<h1> cannot enter twice in a day");
-                } else {
-                    ids.forEach((id, index) => {
-    
-                        var newAttendance = new Attendance({
-                            pDate: new Date().toLocaleDateString(),
-                            isPresent: categories[index],
-                        })
-    
-                        newAttendance.save();
-    
-                        Student.findOneAndUpdate(
-                            { _id: _.lowerCase(id) },
-                            { "$push": { "attendance": newAttendance } },
-                            function (err, foundStudent) {
-                                if (err) {
-                                    console.log(err);
-                                } else {
-                                    if (foundStudent) {
-                                        // console.log("entered successfully");
-    
-                                    } else {
-                                        console.log("no student found");
-                                    }
-                                }
-                            }
-                        )
-    
-                    })
-
-                   
-                    res.redirect("/attendance");
-                }
-            } 
+                    }
+                )
+            }
         }
     })
 
 
+
 })
+
+// app.post("/attendance", (req, res) => {
+
+    
+
+//     var categories = req.body.category;
+//     var ids = req.body.id;
+//     let tDay = new Date().toLocaleDateString();
+//     var foundDate;
+    
+//     Student.findById(_.lowerCase(ids[0]), (err, foundStudent) => {
+//         if (err) {
+//             return res.send(err);
+//         } else {
+//             if (foundStudent.attendance.length === 0) {
+               
+//                 ids.forEach((id, index) => {
+            
+
+//                     var newAttendance = new Attendance({
+//                         pDate: new Date().toLocaleDateString(),
+//                         isPresent: categories[index],
+//                     })
+
+//                     newAttendance.save();
+
+//                     Student.findOneAndUpdate(
+//                         { _id: _.lowerCase(id) },
+//                         { "$push": { "attendance": newAttendance } },
+//                         function (err, foundStudent) {
+//                             if (err) {
+//                                 console.log(err);
+//                             } else {
+//                                 if (foundStudent) {
+//                                     // console.log("entered successfully");
+
+//                                 } else {
+//                                     console.log("no student found");
+//                                 }
+//                             }
+//                         }
+//                     )
+
+//                 })
+           
+//                 res.redirect("/attendance");
+//             } else{
+//                 foundDate = foundStudent.attendance[foundStudent.attendance.length - 1].pDate;
+//                 if(foundDate === tDay) {
+//                     res.send("<h1> cannot enter twice in a day");
+//                 } else {
+//                     ids.forEach((id, index) => {
+    
+//                         var newAttendance = new Attendance({
+//                             pDate: new Date().toLocaleDateString(),
+//                             isPresent: categories[index],
+//                         })
+    
+//                         newAttendance.save();
+    
+//                         Student.findOneAndUpdate(
+//                             { _id: _.lowerCase(id) },
+//                             { "$push": { "attendance": newAttendance } },
+//                             function (err, foundStudent) {
+//                                 if (err) {
+//                                     console.log(err);
+//                                 } else {
+//                                     if (foundStudent) {
+//                                         // console.log("entered successfully");
+    
+//                                     } else {
+//                                         console.log("no student found");
+//                                     }
+//                                 }
+//                             }
+//                         )
+    
+//                     })
+
+                   
+//                     res.redirect("/attendance");
+//                 }
+//             } 
+//         }
+//     })
+
+
+// })
 
 app.post("/delete/attendance", (req, res) => {
 
