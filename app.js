@@ -676,7 +676,29 @@ app.post("/update/attendance", (req, res) => {
                 
                 )
             }else{
-                res.send("<h1> please enter first</h1>")
+                var newAttendance = new Attendance({
+                    pDate: new Date().toLocaleDateString(),
+                    isPresent: categories[index],
+                })
+
+                newAttendance.save();
+                Student.findOneAndUpdate(
+                    { _id: _.lowerCase(id) },
+                    { "$push": { "attendance": newAttendance } },
+                    function (err, foundStudent) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            if (foundStudent) {
+                                // console.log("entered successfully");
+
+                            } else {
+                                console.log("no student found");
+                            }
+                        }
+                    }
+                )
+
             }
           
         })
