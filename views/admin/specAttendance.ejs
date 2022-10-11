@@ -29,6 +29,7 @@
         <tr>
           <th scope="col">Date </th>
           <th scope="col">Status</th>
+          <th scope="col">delete</th>
          
 
         </tr>
@@ -43,15 +44,15 @@
               <%= subject.isPresent %>
             </td>
             
-            <!-- <td>
+            <td>
     
-              <form action="/delete" method="post">
-                <button  name="subjectID" value="<%=subject._id%>" class="btn btn-dark btn-md delete" role="button" onclick="return confirm('Are you sure you want to delete this item?');"
+              <form action="/delete/attendance" method="post">
+                <button  name="attendanceID" value="<%=subject._id%>" class="btn btn-dark btn-md delete" role="button" onclick="return confirm('Are you sure you want to delete this item?');"
                   id="print"><i class="fa-solid fa-delete-left"></i></button>
                 <input type="hidden" name="studentID" value="<%=student._id%>">
               </form>
             </td>
-             -->
+            
           </tr>
 
           <% }) %>
