@@ -26,8 +26,8 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// mongoose.connect("mongodb+srv://anasbaqai:An12as34@cluster0.uuocn2n.mongodb.net/OgroupStudentsDB");
-mongoose.connect("mongodb://localhost:27017/sqeDB");
+mongoose.connect("mongodb+srv://anasbaqai:An12as34@cluster0.uuocn2n.mongodb.net/OgroupStudentsDB");
+// mongoose.connect("mongodb://localhost:27017/sqeDB");
 
 const usersSchema = new mongoose.Schema({
     username: String,
@@ -419,29 +419,29 @@ app.get("/delete/:studentID", function (req, res) {
 })
 
 /*********************************************** OPEN SEARCH ROUTE ****************************** */
-// app.get("/openSearch", function (req, res) {
-//     res.render("openSearch");
-// })
+app.get("/openSearch", function (req, res) {
+    res.render("openSearch");
+})
 
-// app.post("/openSearch", function (req, res) {
-//     res.redirect("/openSearch/" + _.lowerCase(req.body.studentID))
-// })
-// app.get("/openSearch/:studentEmail", function (req, res) {
-//     stdEmail = req.params.studentEmail;
-//     console.log(stdEmail);
-//     Student.findOne({ _id: stdID }, function (err, foundStudent) {
-//         if (foundStudent) {
-//             if (err) {
-//                 console.log(err);
-//             } else {
-//                 res.render("openRecord", { student: foundStudent });
-//             }
-//         } else {
-//             res.send("<h1> Record Not Found Enter Valid ID.")
+app.post("/openSearch", function (req, res) {
+    res.redirect("/openSearch/" + _.lowerCase(req.body.studentID))
+})
+app.get("/openSearch/:studentEmail", function (req, res) {
+    stdEmail = req.params.studentEmail;
+    console.log(stdEmail);
+    Student.findOne({ _id: stdEmail }, function (err, foundStudent) {
+        if (foundStudent) {
+            if (err) {
+                console.log(err);
+            } else {
+                res.render("openRecord", { student: foundStudent });
+            }
+        } else {
+            res.send("<h1> Record Not Found Enter Valid ID.")
 
-//         }
-//     })
-// })
+        }
+    })
+})
 
 /**************************************** UPDATE PASSWORD ROUTE ********************************/
 
@@ -490,33 +490,37 @@ app.get("/student/home", (req, res) => {
 })
 
 /******************************* adding email to existing record **********/
-// app.get("/addEmail", (req, res) => {
-//     Student.find({}, (err, foundStudents) => {
-//         if (err) {
-//             res.send(err);
-//         } else {
-//             foundStudents.forEach((student) => {
+app.get("/addEmail", (req, res) => {
+    Student.find({}, (err, foundStudents) => {
+        if (err) {
+            res.send(err);
+        } else {
+            foundStudents.forEach((student) => {
 
-//                 const newEMail = _.lowerCase(student.name) + "." + _.lowerCase(student._id) + "@Ogroup.com";
-//                 const newEmail1 = newEMail.replace(/\s+/g, '');
-//                 console.log(newEmail1);
-//                 User.register({ username: newEmail1 }, "Ogroup123", function (err, user) {
-//                     if (err) {
-//                         console.log(err);
-//                         res.redirect("/");
-//                     }
-//                 })
-//                 Student.findOneAndUpdate({_id:student._id},{email:newEmail1},(err)=>{
-//                     if(err){
-//                         res.send(err);
-//                     }
-//                 })
-//             })
-//         }
-//     })
+                const newEMail = _.lowerCase(student.name) + "." + _.lowerCase(student._id) + "@Ogroup.com";
+                const newEmail1 = newEMail.replace(/\s+/g, '');
+                
+                if(student.email==null){
+                      
+                User.register({ username: newEmail1 }, "Ogroup123", function (err, user) {
+                    if (err) {
+                        console.log(err);
+                        res.redirect("/");
+                    }
+                })
+                Student.findOneAndUpdate({_id:student._id},{email:newEmail1},(err)=>{
+                    if(err){
+                        res.send(err);
+                    }
+                })
+                }
+              
+            })
+        }
+    })
 
-//     res.send("Updatted successfully");
-// })
+    res.send("Updatted successfully");
+})
 
 
 
