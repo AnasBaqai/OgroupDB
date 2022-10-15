@@ -78,22 +78,22 @@ const Attendance = mongoose.model("Attendance", attendanceSchema);
 /******************************************ROUTES ******************************** */
 
 
-// app.get("/createAdmin",(req,res)=>{
-//     res.sendFile(__dirname+"/views/adminCreate.html")
-// })
+app.get("/createAdmin",(req,res)=>{
+    res.sendFile(__dirname+"/views/adminCreate.html")
+})
 
-// app.post("/createAdmin",(req,res)=>{
-//     User.register({ username: req.body.username }, req.body.password, function (err, user) {
-//         if (err) {
-//             console.log(err);
-//             res.redirect("/");
-//         } else {
-//             passport.authenticate("local")(req, res, function () {
-//                 res.redirect("/register");
-//             })
-//         }
-//     })
-// })
+app.post("/createAdmin",(req,res)=>{
+    User.register({ username: req.body.username }, req.body.password, function (err, user) {
+        if (err) {
+            console.log(err);
+            res.redirect("/");
+        } else {
+            passport.authenticate("local")(req, res, function () {
+                res.redirect("/register");
+            })
+        }
+    })
+})
 
 /*******************************************LOGIN ROUTE **********************************/
 
@@ -106,7 +106,7 @@ app.post("/", function (req, res) {
         username: req.body.username,
         password: req.body.password,
     })
-    if (user.username === "admin") {
+    if (user.username === "admin1" ||user.username === "admin2"  ) {
         req.login(user, function (err) {
 
             if (err) {
@@ -359,7 +359,20 @@ app.get("/findALL", function (req, res) {
             if (err) {
                 console.log(err);
             } else {
-                res.render("admin/findALL", { studentsList: foundStudents });
+                var admin1 =[],admin2=[];
+                foundStudents.forEach((student)=>{
+                    const id=_.lowerCase(student._id);
+                    if(student._id.indexOf("ogl")>-1 || student._id.indexOf("0g")>-1 || student._id.indexOf("o gl")>-1){
+                        admin1.push(student);
+                    }else{
+                        admin2.push(student);
+                    }
+                })
+               if(req.user.username==="admin1"){
+                res.render("admin/findALL", { studentsList: admin1 });
+               }else{
+                res.render("admin/findALL", { studentsList: admin2 });
+               }
             }
         })
     } else {
@@ -526,12 +539,36 @@ app.get("/addEmail", (req, res) => {
 
 /****************************** ATTENDANCE ROUTE ******************************/
 app.get("/attendance", (req, res) => {
+    // if (req.isAuthenticated()) {
+    //     Student.find({}, function (err, foundStudents) {
+    //         if (err) {
+    //             console.log(err);
+    //         } else {
+    //             res.render("admin/attendance", { studentsList: foundStudents });
+    //         }
+    //     })
+    // } else {
+    //     res.redirect("/");
+    // }
     if (req.isAuthenticated()) {
         Student.find({}, function (err, foundStudents) {
             if (err) {
                 console.log(err);
             } else {
-                res.render("admin/attendance", { studentsList: foundStudents });
+                var admin1 =[],admin2=[];
+                foundStudents.forEach((student)=>{
+                    const id=_.lowerCase(student._id);
+                    if(student._id.indexOf("ogl")>-1 || student._id.indexOf("0g")>-1 || student._id.indexOf("o gl")>-1){
+                        admin1.push(student);
+                    }else{
+                        admin2.push(student);
+                    }
+                })
+               if(req.user.username==="admin1"){
+                res.render("admin/attendance", { studentsList: admin1 });
+               }else{
+                res.render("admin/attendance", { studentsList: admin2 });
+               }
             }
         })
     } else {
@@ -710,6 +747,12 @@ app.get("/attendance/:studentID", function (req, res) {
     }
 })
 
+
+/************************************** UPDATION RECORD ROUTE *********************/
+
+app.post("/update/record",(req,res)=>{
+    console.log(req.body);
+})
 
 
 /*********************************** LISTENER PORT ROUTE **************************************/
