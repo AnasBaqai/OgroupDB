@@ -12,7 +12,8 @@
             <th scope="col">class</th>
 
             <th scope="col">Attendance</th>
-
+            <th scope="col">save</th>
+            <th scope="col">See More</th>
           </tr>
         </thead>
         <tbody>
@@ -32,19 +33,24 @@
 
               
              
-              <td>
-                <form action="/attendance" method="post">
+              
+                <td>
+                  <form action="/attendance" method="post">
                   
                     <select class="form-control" name="category" size="1" style="width: 3rem;">
                       <option value="P">P</option>
                       <option value="A">A</option>
                      
                     </select>
+                </td>
     
                   
                   <input type="hidden" name="studentID" value="<%=student._id%>">
-                  <button type="submit" class="btn btn-sm btn-dark">save</button>
-                </form> </td>
+                  <td>
+                    <button type="submit" class="btn btn-sm btn-dark">save</button>
+                  </td>
+                
+                </form>
               <td><a class="btn btn-sm btn-dark" href="/attendance/<%=student._id%>">see more</a></td>
               <!-- <td>
                 <a  class="delete btn btn-md btn-dark" onclick="return confirm('Are you sure you want to delete this item?');" role="button" href="/delete/<%=student._id%>"><i
