@@ -78,11 +78,11 @@ const Attendance = mongoose.model("Attendance", attendanceSchema);
 /******************************************ROUTES ******************************** */
 
 
-app.get("/createAdmin",(req,res)=>{
-    res.sendFile(__dirname+"/views/adminCreate.html")
+app.get("/createAdmin", (req, res) => {
+    res.sendFile(__dirname + "/views/adminCreate.html")
 })
 
-app.post("/createAdmin",(req,res)=>{
+app.post("/createAdmin", (req, res) => {
     User.register({ username: req.body.username }, req.body.password, function (err, user) {
         if (err) {
             console.log(err);
@@ -106,7 +106,7 @@ app.post("/", function (req, res) {
         username: req.body.username,
         password: req.body.password,
     })
-    if (user.username === "admin1" ||user.username === "admin2"  ) {
+    if (user.username === "admin1" || user.username === "admin2"|| user.username === "admin") {
         req.login(user, function (err) {
 
             if (err) {
@@ -359,20 +359,22 @@ app.get("/findALL", function (req, res) {
             if (err) {
                 console.log(err);
             } else {
-                var admin1 =[],admin2=[];
-                foundStudents.forEach((student)=>{
-                    const id=_.lowerCase(student._id);
-                    if(student._id.indexOf("ogl")>-1 || student._id.indexOf("0g")>-1 || student._id.indexOf("o gl")>-1){
+                var admin1 = [], admin2 = [];
+                foundStudents.forEach((student) => {
+                    const id = _.lowerCase(student._id);
+                    if (student._id.indexOf("ogl") > -1 || student._id.indexOf("0g") > -1 || student._id.indexOf("o gl") > -1) {
                         admin1.push(student);
-                    }else{
+                    } else {
                         admin2.push(student);
                     }
                 })
-               if(req.user.username==="admin1"){
-                res.render("admin/findALL", { studentsList: admin1 });
-               }else{
-                res.render("admin/findALL", { studentsList: admin2 });
-               }
+                if (req.user.username === "admin1") {
+                    res.render("admin/findALL", { studentsList: admin1 });
+                } else if(req.user.username === "admin2"){
+                    res.render("admin/findALL", { studentsList: admin2 });
+                }else{
+                    res.render("admin/findALL", { studentsList: foundStudents });
+                }
             }
         })
     } else {
@@ -512,22 +514,22 @@ app.get("/addEmail", (req, res) => {
 
                 const newEMail = _.lowerCase(student.name) + "." + _.lowerCase(student._id) + "@Ogroup.com";
                 const newEmail1 = newEMail.replace(/\s+/g, '');
-                
-                if(student.email==null){
-                      
-                User.register({ username: newEmail1 }, "Ogroup123", function (err, user) {
-                    if (err) {
-                        console.log(err);
-                        res.redirect("/");
-                    }
-                })
-                Student.findOneAndUpdate({_id:student._id},{email:newEmail1},(err)=>{
-                    if(err){
-                        res.send(err);
-                    }
-                })
+
+                if (student.email == null) {
+
+                    User.register({ username: newEmail1 }, "Ogroup123", function (err, user) {
+                        if (err) {
+                            console.log(err);
+                            res.redirect("/");
+                        }
+                    })
+                    Student.findOneAndUpdate({ _id: student._id }, { email: newEmail1 }, (err) => {
+                        if (err) {
+                            res.send(err);
+                        }
+                    })
                 }
-              
+
             })
         }
     })
@@ -555,20 +557,23 @@ app.get("/attendance", (req, res) => {
             if (err) {
                 console.log(err);
             } else {
-                var admin1 =[],admin2=[];
-                foundStudents.forEach((student)=>{
-                    const id=_.lowerCase(student._id);
-                    if(student._id.indexOf("ogl")>-1 || student._id.indexOf("0g")>-1 || student._id.indexOf("o gl")>-1){
+                var admin1 = [], admin2 = [];
+                foundStudents.forEach((student) => {
+                    const id = _.lowerCase(student._id);
+                    if (student._id.indexOf("ogl") > -1 || student._id.indexOf("0g") > -1 || student._id.indexOf("o gl") > -1) {
                         admin1.push(student);
-                    }else{
+                    } else {
                         admin2.push(student);
                     }
                 })
-               if(req.user.username==="admin1"){
-                res.render("admin/attendance", { studentsList: admin1 });
-               }else{
-                res.render("admin/attendance", { studentsList: admin2 });
-               }
+                if (req.user.username === "admin1") {
+                    res.render("admin/attendance", { studentsList: admin1 });
+                } else if(req.user.username === "admin2"){
+                    res.render("admin/attendance", { studentsList: admin2 });
+                }else{
+                    res.render("admin/attendance", { studentsList: foundStudents });
+
+                }
             }
         })
     } else {
@@ -579,21 +584,21 @@ app.get("/attendance", (req, res) => {
 
 app.post("/attendance", (req, res) => {
 
-    
+
 
     var categories = req.body.category;
     var ids = req.body.id;
     let tDay = new Date().toLocaleDateString();
     var foundDate;
-    
+
     Student.findById(_.lowerCase(ids[0]), (err, foundStudent) => {
         if (err) {
             return res.send(err);
         } else {
             if (foundStudent.attendance.length === 0) {
-               
+
                 ids.forEach((id, index) => {
-            
+
 
                     var newAttendance = new Attendance({
                         pDate: new Date().toLocaleDateString(),
@@ -620,22 +625,22 @@ app.post("/attendance", (req, res) => {
                     )
 
                 })
-           
+
                 res.redirect("/attendance");
-            } else{
+            } else {
                 foundDate = foundStudent.attendance[foundStudent.attendance.length - 1].pDate;
-                if(foundDate === tDay) {
+                if (foundDate === tDay) {
                     res.send("<h1> cannot enter twice in a day");
                 } else {
                     ids.forEach((id, index) => {
-    
+
                         var newAttendance = new Attendance({
                             pDate: new Date().toLocaleDateString(),
                             isPresent: categories[index],
                         })
-    
+
                         newAttendance.save();
-    
+
                         Student.findOneAndUpdate(
                             { _id: _.lowerCase(id) },
                             { "$push": { "attendance": newAttendance } },
@@ -645,20 +650,20 @@ app.post("/attendance", (req, res) => {
                                 } else {
                                     if (foundStudent) {
                                         // console.log("entered successfully");
-    
+
                                     } else {
                                         console.log("no student found");
                                     }
                                 }
                             }
                         )
-    
+
                     })
 
-                   
+
                     res.redirect("/attendance");
                 }
-            } 
+            }
         }
     })
 
@@ -696,25 +701,25 @@ app.post("/update/attendance", (req, res) => {
     var categories = req.body.category;
     var ids = req.body.id;
     ids.forEach((id, index) => {
-        
-        Student.findById( _.lowerCase(id),(err,foundStudent)=>{
-            if(foundStudent.attendance.length!==0){
-                let upId= foundStudent.attendance[foundStudent.attendance.length - 1]._id;
-                
-                Student.updateOne({'attendance._id' :upId},
-                { '$set':{'attendance.$.pDate':new Date().toLocaleDateString(),'attendance.$.isPresent':categories[index]}},
-                function (err) {
-                            if (err) {
-                                console.log(err);
-                            } 
+
+        Student.findById(_.lowerCase(id), (err, foundStudent) => {
+            if (foundStudent.attendance.length !== 0) {
+                let upId = foundStudent.attendance[foundStudent.attendance.length - 1]._id;
+
+                Student.updateOne({ 'attendance._id': upId },
+                    { '$set': { 'attendance.$.pDate': new Date().toLocaleDateString(), 'attendance.$.isPresent': categories[index] } },
+                    function (err) {
+                        if (err) {
+                            console.log(err);
                         }
-                
-                
+                    }
+
+
                 )
-            }else{
+            } else {
                 res.send("<h1> please enter first</h1>")
             }
-          
+
         })
 
     })
@@ -750,8 +755,26 @@ app.get("/attendance/:studentID", function (req, res) {
 
 /************************************** UPDATION RECORD ROUTE *********************/
 
-app.post("/update/record",(req,res)=>{
-    console.log(req.body);
+app.post("/update/record", (req, res) => {
+
+    const filter = { _id:req.body.studentID };
+    const update = { 
+        name: _.lowerCase(req.body.name),
+    
+        class: _.lowerCase(req.body.class),
+        address: _.lowerCase(req.body.address),
+        phoneNumber: _.lowerCase(req.body.phoneNumber),
+        
+     };
+
+     Student.findOneAndUpdate(filter, update,(err)=>{
+        if(err){
+            res.send(err);
+        }else{
+            res.redirect("/findALL")
+        }
+     });
+
 })
 
 

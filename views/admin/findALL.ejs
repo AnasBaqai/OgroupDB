@@ -1,4 +1,11 @@
 <%- include("../partials/header") -%>
+<style>
+  input {
+background-color: rgba(0,0,0.1,0.1);
+color: #000;
+border: none;
+}
+</style>
   <div class="details">
     <div class="table-responsive">
       <table class="table">
@@ -19,25 +26,25 @@
           <% studentsList.forEach(function(student){ %>
             <tr>
               <form action="/update/record" method="post">
-                <th scope="row"contenteditable="true">
-                 <input type="text" value=" <%= student._id %>" name="id" style="width: 5rem;" readonly="true" ondblclick="this.readOnly='';">
+                <th scope="row">
+                 <input type="text"  value=" <%= student._id %>" name="id" style="width: 5rem; border: 0;" readonly="true">
                 </th>
-                <td scope="row" contenteditable="true">
-                <input type="text" name="name" value="  <%= student.name %>"style="width: 10rem;">
+                <td scope="row" c>
+                <input type="text" name="name" value="  <%= student.name %>"style="width: 10rem; border: 0;" readonly="true" ondblclick="this.readOnly='';">
                 </td>
-                <td contenteditable="true">
-                 <input type="text" value=" <%= student.class %>" name="class"style="width: 5rem;">
+                <td >
+                 <input type="text" value=" <%= student.class %>" name="class"style="width: 5rem; border: 0;" readonly="true" ondblclick="this.readOnly='';">
                 </td>
-                <td contenteditable="true">
-                 <input type="text" name="address" value=" <%= student.address %>"style="width: 10rem;">
+                <td >
+                 <input type="text" name="address" value=" <%= student.address %>"style="width: 10rem; border: 0;" readonly="true" ondblclick="this.readOnly='';"> 
                 </td>
-                <td contenteditable="true">
-                  <input type="text" name="phoneNumber" value="<%= student.phoneNumber %>"style="width: 10rem;">
+                <td>
+                  <input type="text" name="phoneNumber" value="<%= student.phoneNumber %>"style="width: 10rem; border: 0;" readonly="true" ondblclick="this.readOnly='';">
                 </td>
                 <td>
                   <button type="submit" class="btn btn-sm btn-dark">save</button>
                 </td>
-               
+                <input type="hidden" name="studentID" value="<%=student._id%>">
               </form>
                 <!-- <td><a href="/findALL/<%=student.name%>">see more</a></td> -->
                 <td>
