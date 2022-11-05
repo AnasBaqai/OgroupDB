@@ -792,3 +792,61 @@ app.post("/update/record", (req, res) => {
 app.listen(process.env.PORT || 3000, function (req, res) {
     console.log("server is running at port 3000");
 })
+    
+
+    // app.post("/attendance",(req,res)=>{
+    
+    //     var newAttendance = new Attendance({
+    //         pDate: new Date().toLocaleDateString(),
+    //         isPresent: req.body.category,
+    //     })
+    //     let tDay = new Date().toLocaleDateString();
+    //     var foundDate;
+    //     Student.findById(_.lowerCase(req.body.studentID), (err, foundStudent) => {
+    //         if (foundStudent.attendance.length == 0) {
+    //             newAttendance.save();
+    //             Student.findOneAndUpdate(
+    //                 { _id: _.lowerCase(req.body.studentID) },
+    //                 { "$push": { "attendance": newAttendance } },
+    //                 function (err, foundStudent) {
+    //                     if (err) {
+    //                         console.log(err);
+    //                     } else {
+    //                         if (foundStudent) {
+    //                             console.log("entered successfully");
+    //                             res.redirect("/attendance");
+    //                         } else {
+    //                             res.send("<h1>no student found<h1>");
+    //                         }
+    //                     }
+    //                 }
+    //             )
+    //         } else {
+    //             foundDate = foundStudent.attendance[foundStudent.attendance.length - 1].pDate;
+    //             if (foundDate === tDay) {
+    //                 res.send("<h1> cannot enter twice in a day");
+    //             }else{
+    //                 newAttendance.save();
+    //                 Student.findOneAndUpdate(
+    //                     { _id: _.lowerCase(req.body.studentID) },
+    //                     { "$push": { "attendance": newAttendance } },
+    //                     function (err, foundStudent) {
+    //                         if (err) {
+    //                             console.log(err);
+    //                         } else {
+    //                             if (foundStudent) {
+    //                                 console.log("entered successfully");
+    //                                 res.redirect("/attendance");
+    //                             } else {
+    //                                 res.send("<h1>no student found<h1>");
+    //                             }
+    //                         }
+    //                     }
+    //                 )
+    //             }
+    //         }
+    //     })
+    
+    
+    
+    
