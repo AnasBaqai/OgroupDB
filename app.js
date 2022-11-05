@@ -677,7 +677,7 @@ app.post("/attendance", (req, res) => {
 //     })
 
 
-// })
+ })
 
 app.post("/delete/attendance", (req, res) => {
 
