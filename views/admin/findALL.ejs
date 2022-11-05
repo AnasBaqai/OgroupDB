@@ -1,4 +1,11 @@
 <%- include("../partials/header") -%>
+<style>
+  input {
+background-color: rgba(0,0,0.1,0.1);
+color: #000;
+border: none;
+}
+</style>
   <div class="details">
     <div class="table-responsive">
       <table class="table">
@@ -6,10 +13,11 @@
           <tr>
             <th scope="col">GR NO</th>
             <th scope="col">name</th>
-            
+
             <th scope="col">class</th>
             <th scope="col">Address</th>
             <th scope="col">Phone Number</th>
+            <th scope="col">Update Record</th>
             <th scope="col">Information</th>
             <th scope="col">delete</th>
           </tr>
@@ -17,31 +25,38 @@
         <tbody>
           <% studentsList.forEach(function(student){ %>
             <tr>
-              <th scope="row">
-                <%= student._id %>
-              </th>
-              <td scope ="row">
-                <%= student.name %>
-              </td>
-              <td>
-                <%= student.class %>
-              </td>
-              <td>
-                <%= student.address %>
-              </td>
-              <td>
-                <%= student.phoneNumber %>
-              </td>
-              <!-- <td><a href="/findALL/<%=student.name%>">see more</a></td> -->
-              <td>
-                <form action="/find" method="post">
+              <form action="/update/record" method="post">
+                <th scope="row">
+                 <input type="text"  value=" <%= student._id %>" name="id" style="width: 5rem; border: 0;" readonly="true">
+                </th>
+                <td scope="row" c>
+                <input type="text" name="name" value="  <%= student.name %>"style="width: 10rem; border: 0;" readonly="true" ondblclick="this.readOnly='';">
+                </td>
+                <td >
+                 <input type="text" value=" <%= student.class %>" name="class"style="width: 5rem; border: 0;" readonly="true" ondblclick="this.readOnly='';">
+                </td>
+                <td >
+                 <input type="text" name="address" value=" <%= student.address %>"style="width: 10rem; border: 0;" readonly="true" ondblclick="this.readOnly='';"> 
+                </td>
+                <td>
+                  <input type="text" name="phoneNumber" value="<%= student.phoneNumber %>"style="width: 10rem; border: 0;" readonly="true" ondblclick="this.readOnly='';">
+                </td>
+                <td>
+                  <button type="submit" class="btn btn-sm btn-dark">save</button>
+                </td>
+                <input type="hidden" name="studentID" value="<%=student._id%>">
+              </form>
+                <!-- <td><a href="/findALL/<%=student.name%>">see more</a></td> -->
+                <td>
+                  <form action="/find" method="post">
                   <input type="hidden" name="studentID" value="<%=student._id%>">
                   <button type="submit" class="btn btn-sm btn-dark">see more</button>
-                </form>
+              </form>
               </td>
               <td>
-                <a  class="delete btn btn-md btn-dark" onclick="return confirm('Are you sure you want to delete this item?');" role="button" href="/delete/<%=student._id%>"><i
-                    class="fa-solid fa-delete-left fa-lg"></i></a>
+                <a class="delete btn btn-md btn-dark"
+                  onclick="return confirm('Are you sure you want to delete this item?');" role="button"
+                  href="/delete/<%=student._id%>"><i class="fa-solid fa-delete-left fa-lg"></i></a>
               </td>
             </tr>
 

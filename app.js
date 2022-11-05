@@ -79,22 +79,22 @@ const Attendance = mongoose.model("Attendance", attendanceSchema);
 /******************************************ROUTES ******************************** */
 
 
-// app.get("/createAdmin",(req,res)=>{
-//     res.sendFile(__dirname+"/views/adminCreate.html")
-// })
+app.get("/createAdmin", (req, res) => {
+    res.sendFile(__dirname + "/views/adminCreate.html")
+})
 
-// app.post("/createAdmin",(req,res)=>{
-//     User.register({ username: req.body.username }, req.body.password, function (err, user) {
-//         if (err) {
-//             console.log(err);
-//             res.redirect("/");
-//         } else {
-//             passport.authenticate("local")(req, res, function () {
-//                 res.redirect("/register");
-//             })
-//         }
-//     })
-// })
+app.post("/createAdmin", (req, res) => {
+    User.register({ username: req.body.username }, req.body.password, function (err, user) {
+        if (err) {
+            console.log(err);
+            res.redirect("/");
+        } else {
+            passport.authenticate("local")(req, res, function () {
+                res.redirect("/register");
+            })
+        }
+    })
+})
 
 /*******************************************LOGIN ROUTE **********************************/
 
@@ -107,7 +107,7 @@ app.post("/", function (req, res) {
         username: req.body.username,
         password: req.body.password,
     })
-    if (user.username === "admin") {
+    if (user.username === "admin1" || user.username === "admin2"|| user.username === "admin") {
         req.login(user, function (err) {
 
             if (err) {
@@ -360,7 +360,22 @@ app.get("/findALL", function (req, res) {
             if (err) {
                 console.log(err);
             } else {
-                res.render("admin/findALL", { studentsList: foundStudents });
+                var admin1 = [], admin2 = [];
+                foundStudents.forEach((student) => {
+                    const id = _.lowerCase(student._id);
+                    if (student._id.indexOf("ogl") > -1 || student._id.indexOf("0g") > -1 || student._id.indexOf("o gl") > -1) {
+                        admin1.push(student);
+                    } else {
+                        admin2.push(student);
+                    }
+                })
+                if (req.user.username === "admin1") {
+                    res.render("admin/findALL", { studentsList: admin1 });
+                } else if(req.user.username === "admin2"){
+                    res.render("admin/findALL", { studentsList: admin2 });
+                }else{
+                    res.render("admin/findALL", { studentsList: foundStudents });
+                }
             }
         })
     } else {
@@ -500,22 +515,22 @@ app.get("/addEmail", (req, res) => {
 
                 const newEMail = _.lowerCase(student.name) + "." + _.lowerCase(student._id) + "@Ogroup.com";
                 const newEmail1 = newEMail.replace(/\s+/g, '');
-                
-                if(student.email==null){
-                      
-                User.register({ username: newEmail1 }, "Ogroup123", function (err, user) {
-                    if (err) {
-                        console.log(err);
-                        res.redirect("/");
-                    }
-                })
-                Student.findOneAndUpdate({_id:student._id},{email:newEmail1},(err)=>{
-                    if(err){
-                        res.send(err);
-                    }
-                })
+
+                if (student.email == null) {
+
+                    User.register({ username: newEmail1 }, "Ogroup123", function (err, user) {
+                        if (err) {
+                            console.log(err);
+                            res.redirect("/");
+                        }
+                    })
+                    Student.findOneAndUpdate({ _id: student._id }, { email: newEmail1 }, (err) => {
+                        if (err) {
+                            res.send(err);
+                        }
+                    })
                 }
-              
+
             })
         }
     })
@@ -527,152 +542,132 @@ app.get("/addEmail", (req, res) => {
 
 /****************************** ATTENDANCE ROUTE ******************************/
 app.get("/attendance", (req, res) => {
+    // if (req.isAuthenticated()) {
+    //     Student.find({}, function (err, foundStudents) {
+    //         if (err) {
+    //             console.log(err);
+    //         } else {
+    //             res.render("admin/attendance", { studentsList: foundStudents });
+    //         }
+    //     })
+    // } else {
+    //     res.redirect("/");
+    // }
     if (req.isAuthenticated()) {
         Student.find({}, function (err, foundStudents) {
             if (err) {
                 console.log(err);
             } else {
-                res.render("admin/attendance", { studentsList: foundStudents });
+                var admin1 = [], admin2 = [];
+                foundStudents.forEach((student) => {
+                    const id = _.lowerCase(student._id);
+                    if (student._id.indexOf("ogl") > -1 || student._id.indexOf("0g") > -1 || student._id.indexOf("o gl") > -1) {
+                        admin1.push(student);
+                    } else {
+                        admin2.push(student);
+                    }
+                })
+                if (req.user.username === "admin1") {
+                    res.render("admin/attendance", { studentsList: admin1 });
+                } else if(req.user.username === "admin2"){
+                    res.render("admin/attendance", { studentsList: admin2 });
+                }else{
+                    res.render("admin/attendance", { studentsList: foundStudents });
+
+                }
             }
         })
     } else {
         res.redirect("/");
     }
 })
-app.post("/attendance",(req,res)=>{
+
+
+app.post("/attendance", (req, res) => {
+
     
-    var newAttendance = new Attendance({
-        pDate: new Date().toLocaleDateString(),
-        isPresent: req.body.category,
-    })
+
+    var categories = req.body.category;
+    var ids = req.body.id;
     let tDay = new Date().toLocaleDateString();
     var foundDate;
-    Student.findById(_.lowerCase(req.body.studentID), (err, foundStudent) => {
-        if (foundStudent.attendance.length == 0) {
-            newAttendance.save();
-            Student.findOneAndUpdate(
-                { _id: _.lowerCase(req.body.studentID) },
-                { "$push": { "attendance": newAttendance } },
-                function (err, foundStudent) {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        if (foundStudent) {
-                            console.log("entered successfully");
-                            res.redirect("/attendance");
-                        } else {
-                            res.send("<h1>no student found<h1>");
-                        }
-                    }
-                }
-            )
+    
+    Student.findById(_.lowerCase(ids[0]), (err, foundStudent) => {
+        if (err) {
+            return res.send(err);
         } else {
-            foundDate = foundStudent.attendance[foundStudent.attendance.length - 1].pDate;
-            if (foundDate === tDay) {
-                res.send("<h1> cannot enter twice in a day");
-            }else{
-                newAttendance.save();
-                Student.findOneAndUpdate(
-                    { _id: _.lowerCase(req.body.studentID) },
-                    { "$push": { "attendance": newAttendance } },
-                    function (err, foundStudent) {
-                        if (err) {
-                            console.log(err);
-                        } else {
-                            if (foundStudent) {
-                                console.log("entered successfully");
-                                res.redirect("/attendance");
+            if (foundStudent.attendance.length === 0) {
+               
+                ids.forEach((id, index) => {
+            
+
+                    var newAttendance = new Attendance({
+                        pDate: new Date().toLocaleDateString(),
+                        isPresent: categories[index],
+                    })
+
+                    newAttendance.save();
+
+                    Student.findOneAndUpdate(
+                        { _id: _.lowerCase(id) },
+                        { "$push": { "attendance": newAttendance } },
+                        function (err, foundStudent) {
+                            if (err) {
+                                console.log(err);
                             } else {
-                                res.send("<h1>no student found<h1>");
+                                if (foundStudent) {
+                                    // console.log("entered successfully");
+
+                                } else {
+                                    console.log("no student found");
+                                }
                             }
                         }
-                    }
-                )
-            }
+                    )
+
+                })
+           
+                res.redirect("/attendance");
+            } else{
+                foundDate = foundStudent.attendance[foundStudent.attendance.length - 1].pDate;
+                if(foundDate === tDay) {
+                    res.send("<h1> cannot enter twice in a day");
+                } else {
+                    ids.forEach((id, index) => {
+    
+                        var newAttendance = new Attendance({
+                            pDate: new Date().toLocaleDateString(),
+                            isPresent: categories[index],
+                        })
+    
+                        newAttendance.save();
+    
+                        Student.findOneAndUpdate(
+                            { _id: _.lowerCase(id) },
+                            { "$push": { "attendance": newAttendance } },
+                            function (err, foundStudent) {
+                                if (err) {
+                                    console.log(err);
+                                } else {
+                                    if (foundStudent) {
+                                        // console.log("entered successfully");
+    
+                                    } else {
+                                        console.log("no student found");
+                                    }
+                                }
+                            }
+                        )
+    
+                    })
+
+                   
+                    res.redirect("/attendance");
+                }
+            } 
         }
     })
 
-
-
-})
-
-// app.post("/attendance", (req, res) => {
-
-    
-
-//     var categories = req.body.category;
-//     var ids = req.body.id;
-//     let tDay = new Date().toLocaleDateString();
-//     var foundDate;
-    
-//     Student.findById(_.lowerCase(ids[0]), (err, foundStudent) => {
-//         if (err) {
-//             return res.send(err);
-//         } else {
-//             if (foundStudent.attendance.length === 0) {
-               
-//                 ids.forEach((id, index) => {
-            
-
-//                     var newAttendance = new Attendance({
-//                         pDate: new Date().toLocaleDateString(),
-//                         isPresent: categories[index],
-//                     })
-
-//                     newAttendance.save();
-
-//                     Student.findOneAndUpdate(
-//                         { _id: _.lowerCase(id) },
-//                         { "$push": { "attendance": newAttendance } },
-//                         function (err, foundStudent) {
-//                             if (err) {
-//                                 console.log(err);
-//                             } else {
-//                                 if (foundStudent) {
-//                                     // console.log("entered successfully");
-
-//                                 } else {
-//                                     console.log("no student found");
-//                                 }
-//                             }
-//                         }
-//                     )
-
-//                 })
-           
-//                 res.redirect("/attendance");
-//             } else{
-//                 foundDate = foundStudent.attendance[foundStudent.attendance.length - 1].pDate;
-//                 if(foundDate === tDay) {
-//                     res.send("<h1> cannot enter twice in a day");
-//                 } else {
-//                     ids.forEach((id, index) => {
-    
-//                         var newAttendance = new Attendance({
-//                             pDate: new Date().toLocaleDateString(),
-//                             isPresent: categories[index],
-//                         })
-    
-//                         newAttendance.save();
-    
-//                         Student.findOneAndUpdate(
-//                             { _id: _.lowerCase(id) },
-//                             { "$push": { "attendance": newAttendance } },
-//                             function (err, foundStudent) {
-//                                 if (err) {
-//                                     console.log(err);
-//                                 } else {
-//                                     if (foundStudent) {
-//                                         // console.log("entered successfully");
-    
-//                                     } else {
-//                                         console.log("no student found");
-//                                     }
-//                                 }
-//                             }
-//                         )
-    
-//                     })
 
                    
 //                     res.redirect("/attendance");
@@ -715,47 +710,25 @@ app.post("/update/attendance", (req, res) => {
     var categories = req.body.category;
     var ids = req.body.id;
     ids.forEach((id, index) => {
-        
-        Student.findById( _.lowerCase(id),(err,foundStudent)=>{
-            if(foundStudent.attendance.length!==0){
-                let upId= foundStudent.attendance[foundStudent.attendance.length - 1]._id;
-                
-                Student.updateOne({'attendance._id' :upId},
-                { '$set':{'attendance.$.pDate':new Date().toLocaleDateString(),'attendance.$.isPresent':categories[index]}},
-                function (err) {
-                            if (err) {
-                                console.log(err);
-                            } 
-                        }
-                
-                
-                )
-            }else{
-                var newAttendance = new Attendance({
-                    pDate: new Date().toLocaleDateString(),
-                    isPresent: categories[index],
-                })
 
-                newAttendance.save();
-                Student.findOneAndUpdate(
-                    { _id: _.lowerCase(id) },
-                    { "$push": { "attendance": newAttendance } },
-                    function (err, foundStudent) {
+        Student.findById(_.lowerCase(id), (err, foundStudent) => {
+            if (foundStudent.attendance.length !== 0) {
+                let upId = foundStudent.attendance[foundStudent.attendance.length - 1]._id;
+
+                Student.updateOne({ 'attendance._id': upId },
+                    { '$set': { 'attendance.$.pDate': new Date().toLocaleDateString(), 'attendance.$.isPresent': categories[index] } },
+                    function (err) {
                         if (err) {
                             console.log(err);
-                        } else {
-                            if (foundStudent) {
-                                // console.log("entered successfully");
-
-                            } else {
-                                console.log("no student found");
-                            }
                         }
                     }
-                )
 
+
+                )
+            }else{
+                res.send("<h1> please enter first</h1>")
             }
-          
+
         })
 
     })
@@ -788,6 +761,30 @@ app.get("/attendance/:studentID", function (req, res) {
     }
 })
 
+
+/************************************** UPDATION RECORD ROUTE *********************/
+
+app.post("/update/record", (req, res) => {
+
+    const filter = { _id:req.body.studentID };
+    const update = { 
+        name: _.lowerCase(req.body.name),
+    
+        class: _.lowerCase(req.body.class),
+        address: _.lowerCase(req.body.address),
+        phoneNumber: _.lowerCase(req.body.phoneNumber),
+        
+     };
+
+     Student.findOneAndUpdate(filter, update,(err)=>{
+        if(err){
+            res.send(err);
+        }else{
+            res.redirect("/findALL")
+        }
+     });
+
+})
 
 
 /*********************************** LISTENER PORT ROUTE **************************************/
