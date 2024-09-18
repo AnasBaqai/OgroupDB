@@ -413,7 +413,7 @@ app.get("/delete/:studentID", function (req, res) {
         if (err) {
             console.log(err);
         } else {
-            User.deleteOne({ username: student.email }, (err) => {
+            User.deleteOne({ username: student?.email }, (err) => {
                 if (err) {
                     console.log(err);
                 } else {
